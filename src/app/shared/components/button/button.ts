@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from '@angular/common';
+﻿import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   computed,
@@ -134,7 +134,7 @@ export class AppButtonComponent {
       'items-center',
       'justify-center',
       'gap-2',
-      // 'rounded-lg',
+      // 'rounded-sm',
       'border',
       'font-medium',
       'outline-none',

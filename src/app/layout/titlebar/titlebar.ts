@@ -19,8 +19,7 @@ import {
 
 import { OverlayModule } from '@angular/cdk/overlay';
 import { Auth } from '../../core/services/auth';
-
-type AppTheme = 'zinc' | 'slate';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-titlebar',
@@ -46,19 +45,15 @@ export class Titlebar implements OnInit, OnDestroy {
 
   readonly auth = inject(Auth);
 
-  readonly isMaximized = signal(false);
+  readonly themeService = inject(ThemeService);
 
-  readonly theme = signal<AppTheme>(
-    (localStorage.getItem('theme') as AppTheme) ?? 'zinc'
-  );
+  readonly isMaximized = signal(false);
 
   readonly userTooltipOpen = signal(false);
 
   private removeMaximizeListener: (() => void) | null = null;
 
   async ngOnInit(): Promise<void> {
-
-    this.applyTheme(this.theme());
 
     const controls =
       window.checklistApi?.windowControls;
@@ -83,40 +78,7 @@ export class Titlebar implements OnInit, OnDestroy {
   }
 
   toggleTheme(): void {
-
-    const next =
-      this.theme() === 'zinc'
-        ? 'slate'
-        : 'zinc';
-
-    this.theme.set(next);
-
-    localStorage.setItem(
-      'theme',
-      next
-    );
-
-    this.applyTheme(next);
-  }
-
-  private applyTheme(theme: AppTheme): void {
-
-    const root =
-      document.documentElement;
-
-    root.setAttribute(
-      'data-theme',
-      theme
-    );
-
-    root.classList.remove(
-      'theme-zinc',
-      'theme-slate'
-    );
-
-    root.classList.add(
-      `theme-${theme}`
-    );
+    this.themeService.toggle();
   }
 
   minimize(): void {

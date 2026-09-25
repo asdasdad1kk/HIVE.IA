@@ -1,8 +1,8 @@
-<div class="space-y-5">
-  <section class="overflow-hidden rounded-xl border border-zinc-700 bg-zinc-950 shadow-xl shadow-black/10">
+﻿<div class="space-y-5">
+  <section class="overflow-hidden rounded border border-zinc-700 bg-zinc-950 shadow-xl shadow-black/10">
     <header class="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-700 bg-zinc-900 px-5 py-4">
       <div class="flex items-center gap-3">
-        <span class="grid size-10 place-items-center rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-300"><lucide-icon [img]="ListPlus" [size]="19" /></span>
+        <span class="grid size-10 place-items-center rounded-sm border border-blue-500/30 bg-blue-500/10 text-blue-300"><lucide-icon [img]="ListPlus" [size]="19" /></span>
         <div><h3 class="text-sm font-semibold text-white">Plan de acción {{ section().methodology }}</h3><p class="mt-0.5 text-xs text-zinc-500">{{ currentValue().involvedEmails.length }} responsables configurados</p></div>
       </div>
       <div class="w-full max-w-sm">
@@ -13,14 +13,14 @@
     @if (currentValue().involvedEmails.length > 0) {
       <div class="flex flex-wrap gap-2 border-b border-zinc-700 bg-zinc-950 px-5 py-3">
         @for (email of currentValue().involvedEmails; track email) {
-          <span class="inline-flex items-center gap-2 rounded-md border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-300" [title]="email"><lucide-icon [img]="CircleUserRound" [size]="14" class="text-blue-400" />{{ displayName(email) }}</span>
+          <span class="inline-flex items-center gap-2 rounded-sm border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 text-xs text-zinc-300" [title]="email"><lucide-icon [img]="CircleUserRound" [size]="14" class="text-blue-400" />{{ displayName(email) }}</span>
         }
       </div>
     }
   </section>
 
   @for (phase of section().phases; track phase.id) {
-    <section class="overflow-hidden rounded-xl border border-zinc-700 bg-zinc-950 shadow-lg shadow-black/10">
+    <section class="overflow-hidden rounded border border-zinc-700 bg-zinc-950 shadow-lg shadow-black/10">
       <header class="flex items-center justify-between gap-3 border-b border-zinc-700 bg-zinc-900 px-4 py-3">
         <div><h3 class="text-sm font-semibold text-zinc-100">{{ phase.label }}</h3>@if (phase.description) { <p class="mt-0.5 text-xs text-zinc-500">{{ phase.description }}</p> }</div>
       @if (!previewMode()) {
@@ -34,7 +34,7 @@
         h-9
         items-center
         gap-2
-        rounded-lg
+        rounded-sm
         border
         border-amber-500/30
         bg-amber-500/10
@@ -65,7 +65,7 @@
         h-9
         items-center
         gap-2
-        rounded-lg
+        rounded-sm
         border
         border-blue-500/30
         bg-blue-500/10
@@ -114,7 +114,7 @@
       <td class="border-b border-r border-zinc-700 px-2">
         <div class="flex items-center justify-center gap-1">
           @if (hasSubActions(row.id)) {
-            <button type="button" class="flex size-7 items-center justify-center rounded-md border border-amber-500/40 bg-amber-500/10 text-amber-300 transition hover:border-amber-400 hover:bg-amber-500/20" [title]="isCollapsed(row.id) ? 'Expand Sub Actions' : 'Collapse Sub Actions'" (click)="toggleSubActions(row.id)">
+            <button type="button" class="flex size-7 items-center justify-center rounded-sm border border-amber-500/40 bg-amber-500/10 text-amber-300 transition hover:border-amber-400 hover:bg-amber-500/20" [title]="isCollapsed(row.id) ? 'Expand Sub Actions' : 'Collapse Sub Actions'" (click)="toggleSubActions(row.id)">
               <lucide-icon [img]="isCollapsed(row.id) ? ChevronRight : ChevronDown" [size]="13" />
             </button>
           } @else {
@@ -195,10 +195,10 @@
       <td class="border-b border-zinc-700 px-2">
         @if (!previewMode()) {
           <div class="flex items-center justify-center gap-2">
-            <button type="button" class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2 text-[11px] font-semibold text-cyan-300 transition hover:border-cyan-400 hover:bg-cyan-500/20" title="Add Sub Action" aria-label="Add Sub Action" (click)="addSubAction(row)">
+            <button type="button" class="inline-flex h-8 items-center gap-1.5 rounded-sm border border-cyan-500/30 bg-cyan-500/10 px-2 text-[11px] font-semibold text-cyan-300 transition hover:border-cyan-400 hover:bg-cyan-500/20" title="Add Sub Action" aria-label="Add Sub Action" (click)="addSubAction(row)">
               <lucide-icon [img]="GitBranchPlus" [size]="13" /> Sub
             </button>
-            <button type="button" class="inline-flex size-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Delete Action" aria-label="Delete Action" (click)="removeRow(row.id)">
+            <button type="button" class="inline-flex size-8 items-center justify-center rounded-sm border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Delete Action" aria-label="Delete Action" (click)="removeRow(row.id)">
               <lucide-icon [img]="Trash2" [size]="13" />
             </button>
           </div>
@@ -290,7 +290,7 @@
           <td class="border-b border-zinc-700 px-2">
             @if (!previewMode()) {
               <div class="flex items-center justify-center">
-                <button type="button" class="inline-flex size-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Delete Sub Action" aria-label="Delete Sub Action" (click)="removeRow(subAction.id)">
+                <button type="button" class="inline-flex size-8 items-center justify-center rounded-sm border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Delete Sub Action" aria-label="Delete Sub Action" (click)="removeRow(subAction.id)">
                   <lucide-icon [img]="Trash2" [size]="13" />
                 </button>
               </div>

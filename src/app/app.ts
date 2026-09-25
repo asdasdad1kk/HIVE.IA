@@ -64,7 +64,7 @@ import { Titlebar } from './layout/titlebar/titlebar';
       h-96
       w-96
       rounded-full
-      bg-blue-700/5
+      bg-blue-600/8
       blur-3xl
     "
     aria-hidden="true"
@@ -79,22 +79,25 @@ import { Titlebar } from './layout/titlebar/titlebar';
       h-80
       w-80
       rounded-full
-      bg-indigo-700/5
+      bg-blue-600/5
       blur-3xl
     "
     aria-hidden="true"
   ></div>
 
   <div
+    class="app-grain"
+    aria-hidden="true"
+  ></div>
+
+  <div
     class="
       relative
-      mx-auto
       min-h-full
       w-full
-      max-w-[1900px]
       p-5
       md:p-7
-      xl:p-8
+      xl:px-10
     "
   >
     <router-outlet />

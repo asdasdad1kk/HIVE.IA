@@ -35,7 +35,9 @@ import type {
 } from 'ng-apexcharts';
 import { ChecklistRepository } from '../../core/checklist.repository';
 import { ChecklistSubmission, ChecklistTemplate } from '../../core/models';
+import { ThemeService } from '../../core/services/theme.service';
 import { AppButtonComponent } from '../../shared/components/button/button';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 
 
 interface SubmissionRow {
@@ -69,12 +71,16 @@ interface MetricSummary {
   imports: [
     FormsModule,
     NgApexchartsModule,
-    AppButtonComponent
+    AppButtonComponent,
+    PageHeaderComponent
   ],
   templateUrl: './dashboard.page.html'
 })
 export class DashboardPage {
   private readonly repository = inject(ChecklistRepository);
+
+  private readonly themeService =
+    inject(ThemeService);
 
   readonly Activity = Activity;
   readonly BarChart3 = BarChart3;
@@ -239,11 +245,11 @@ export class DashboardPage {
 
   readonly statusColors = ['#10b981', '#f59e0b', '#ef4444'];
 
-  readonly statusLegend: ApexLegend = {
+  readonly statusLegend = computed<ApexLegend>(() => ({
     position: 'bottom',
-    labels: { colors: '#a1a1aa' },
+    labels: { colors: this.secondaryTextColor() },
     fontSize: '12px'
-  };
+  }));
 
   readonly statusDataLabels: ApexDataLabels = {
     enabled: false
@@ -278,14 +284,14 @@ export class DashboardPage {
     }
   };
 
-  readonly calculatedDataLabels: ApexDataLabels = {
+  readonly calculatedDataLabels = computed<ApexDataLabels>(() => ({
     enabled: true,
     style: {
-      colors: ['#e4e4e7'],
+      colors: [this.dataLabelColor()],
       fontSize: '11px'
     },
     offsetX: 6
-  };
+  }));
 
   readonly calculatedFill: ApexFill = {
     type: 'gradient',
@@ -301,28 +307,28 @@ export class DashboardPage {
     }
   };
 
-  readonly calculatedGrid: ApexGrid = {
-    borderColor: '#27272a',
+  readonly calculatedGrid = computed<ApexGrid>(() => ({
+    borderColor: this.gridLineColor(),
     strokeDashArray: 4,
     xaxis: { lines: { show: true } },
     yaxis: { lines: { show: false } }
-  };
+  }));
 
   readonly calculatedXAxis = computed<ApexXAxis>(() => ({
     categories: this.calculatedCategories(),
     labels: {
-      style: { colors: '#71717a', fontSize: '11px' }
+      style: { colors: this.axisTextColor(), fontSize: '11px' }
     },
     axisBorder: { show: false },
     axisTicks: { show: false }
   }));
 
-  readonly calculatedYAxis: ApexYAxis = {
+  readonly calculatedYAxis = computed<ApexYAxis>(() => ({
     labels: {
-      style: { colors: '#a1a1aa', fontSize: '11px' },
+      style: { colors: this.secondaryTextColor(), fontSize: '11px' },
       maxWidth: 180
     }
-  };
+  }));
 
   readonly distributionSeries = computed<ApexAxisChartSeries>(() => [{
     name: 'Respuestas',
@@ -356,10 +362,10 @@ export class DashboardPage {
     labels: {
       rotate: -35,
       trim: true,
-      style: { colors: '#a1a1aa', fontSize: '11px' }
+      style: { colors: this.secondaryTextColor(), fontSize: '11px' }
     },
-    axisBorder: { color: '#3f3f46' },
-    axisTicks: { color: '#3f3f46' }
+    axisBorder: { color: this.strongLineColor() },
+    axisTicks: { color: this.strongLineColor() }
   }));
 
   readonly distributionChart: ApexChart = {
@@ -385,18 +391,38 @@ export class DashboardPage {
     show: false
   };
 
-  readonly chartTheme: ApexTheme = {
-    mode: 'dark'
-  };
+  readonly chartTheme = computed<ApexTheme>(() => ({
+    mode: this.themeService.isDark() ? 'dark' : 'light'
+  }));
 
-  readonly tooltip: ApexTooltip = {
-    theme: 'dark'
-  };
+  readonly tooltip = computed<ApexTooltip>(() => ({
+    theme: this.themeService.isDark() ? 'dark' : 'light'
+  }));
 
-  readonly grid: ApexGrid = {
-    borderColor: '#27272a',
+  readonly grid = computed<ApexGrid>(() => ({
+    borderColor: this.gridLineColor(),
     strokeDashArray: 4
-  };
+  }));
+
+  private readonly gridLineColor = computed(() =>
+    this.themeService.isDark() ? '#27272a' : '#e6e9ef'
+  );
+
+  private readonly strongLineColor = computed(() =>
+    this.themeService.isDark() ? '#3f3f46' : '#d4d9e1'
+  );
+
+  private readonly axisTextColor = computed(() =>
+    this.themeService.isDark() ? '#71717a' : '#5f6a7c'
+  );
+
+  private readonly secondaryTextColor = computed(() =>
+    this.themeService.isDark() ? '#a1a1aa' : '#5f6a7c'
+  );
+
+  private readonly dataLabelColor = computed(() =>
+    this.themeService.isDark() ? '#e4e4e7' : '#272c37'
+  );
 
   readonly chartColors = [
     '#3b82f6',

@@ -1,4 +1,5 @@
-<app-page-header
+﻿<app-page-header
+      eyebrow="Registro operativo"
       title="Historial"
       description="Consulta las respuestas agrupadas por plantilla."
     />
@@ -8,7 +9,7 @@
         role="alert"
         class="
           mb-6
-          rounded-xl
+          rounded
           border border-red-900
           bg-red-950/40
           px-4 py-3
@@ -22,7 +23,7 @@
     @if (loading()) {
       <div
         class="
-          rounded-2xl
+          rounded
           border border-zinc-800
           bg-zinc-900
           p-10
@@ -38,7 +39,7 @@
     @if (!loading() && templateGroups().length === 0) {
       <div
         class="
-          rounded-2xl
+          rounded
           border border-dashed border-zinc-700
           bg-zinc-900/40
           p-12
@@ -50,7 +51,7 @@
             mx-auto
             flex size-14
             items-center justify-center
-            rounded-2xl
+            rounded
             bg-zinc-800
             text-zinc-500
           "
@@ -136,7 +137,7 @@
             <button
               type="button"
               class="
-                rounded-2xl
+                rounded
                 border
                 p-5
                 text-left
@@ -174,7 +175,7 @@
                   class="
                     flex size-11
                     items-center justify-center
-                    rounded-xl
+                    rounded
                   "
                   [class.bg-blue-500/20]="
                     selectedTemplateId() === group.templateId
@@ -242,7 +243,7 @@
               <div class="mt-5 grid grid-cols-3 gap-2">
                 <div
                   class="
-                    rounded-xl
+                    rounded
                     bg-emerald-500/10
                     px-3 py-2
                   "
@@ -264,7 +265,7 @@
 
                 <div
                   class="
-                    rounded-xl
+                    rounded
                     bg-amber-500/10
                     px-3 py-2
                   "
@@ -286,7 +287,7 @@
 
                 <div
                   class="
-                    rounded-xl
+                    rounded
                     bg-red-500/10
                     px-3 py-2
                   "
@@ -321,7 +322,7 @@
         class="
           mt-8
           overflow-hidden
-          rounded-2xl
+          rounded
           border border-zinc-800
           bg-zinc-950
         "
@@ -378,7 +379,7 @@
             <button
               type="button"
               class="
-                rounded-lg
+                rounded-sm
                 border border-zinc-700
                 bg-zinc-950
                 px-3 py-1.5
@@ -558,7 +559,7 @@
                   </td>
                    @if (this.auth.isAdmin()) {
                   <td class="px-4 py-3 text-center">
-                    <a [routerLink]="['/draft', row.submission.id]" class="inline-flex size-9 items-center justify-center rounded-lg border border-blue-500/40 bg-blue-500/10 text-blue-300 transition hover:bg-blue-500/20" [attr.aria-label]="'Abrir checklist ' + row.submission.id" title="Abrir checklist">
+                    <a [routerLink]="['/draft', row.submission.id]" class="inline-flex size-9 items-center justify-center rounded-sm border border-blue-500/40 bg-blue-500/10 text-blue-300 transition hover:bg-blue-500/20" [attr.aria-label]="'Abrir checklist ' + row.submission.id" title="Abrir checklist">
                       <lucide-icon [img]="ExternalLink" [size]="16" />
                     </a>
                   </td>

@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   inject
 } from '@angular/core';
@@ -15,7 +15,7 @@ import { APP_TOOLTIP_TEXT } from './tooltip.token';
       class="
         pointer-events-none
         max-w-80
-        rounded-xl
+        rounded
         border border-zinc-700
         bg-zinc-900
         px-3 py-2.5

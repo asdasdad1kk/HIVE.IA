@@ -1,11 +1,11 @@
-<div class="space-y-5">
-  <section class="overflow-hidden rounded-xl border border-zinc-700 bg-zinc-950 shadow-xl shadow-black/10">
+﻿<div class="space-y-5">
+  <section class="overflow-hidden rounded border border-zinc-700 bg-zinc-950 shadow-xl shadow-black/10">
     <header class="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-700 bg-zinc-900 px-5 py-4">
       <div class="flex items-center gap-3">
-        <span class="grid size-10 place-items-center rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-300"><lucide-icon [img]="ListPlus" [size]="19" /></span>
+        <span class="grid size-10 place-items-center rounded-sm border border-blue-500/30 bg-blue-500/10 text-blue-300"><lucide-icon [img]="ListPlus" [size]="19" /></span>
         <div>
           <div class="flex flex-wrap items-center gap-2">
-            <h3 class="text-sm font-semibold text-white">{{ section().title }}</h3>
+            <h3 class="text-sm font-semibold text-zinc-100">{{ section().title }}</h3>
             <span class="rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-blue-300">{{ section().methodology }}</span>
           </div>
           <p class="mt-0.5 text-xs text-zinc-500">{{ section().phases.length }} proyectos o fases · {{ currentValue().involvedEmails.length }} responsables configurados</p>
@@ -48,7 +48,7 @@
           min-w-[320px]
           flex-1
 
-          rounded-lg
+          rounded-sm
 
           border
           border-zinc-700
@@ -84,7 +84,7 @@
           items-center
           gap-2
 
-          rounded-lg
+          rounded-sm
 
           border
           border-blue-500/30
@@ -114,7 +114,7 @@
           [size]="14"
         />
 
-        Add Involved
+        Agregar involucrados
 
       </button>
 
@@ -141,7 +141,7 @@
           items-center
           gap-2
 
-          rounded-md
+          rounded-sm
 
           border
           border-zinc-700
@@ -186,7 +186,7 @@
               hover:text-red-300
             "
 
-            title="Remove Involved"
+            title="Eliminar involucrado"
 
             (click)="
               removeInvolvedEmail(
@@ -214,7 +214,7 @@
           text-amber-300
         "
       >
-        Add at least one involved user.
+        Agrega al menos un involucrado.
       </span>
 
     }
@@ -224,11 +224,29 @@
 </div>
   </section>
 
-  @for (phase of section().phases; track phase.id) {
-    <section class="overflow-hidden rounded-xl border border-zinc-700 bg-zinc-950 shadow-lg shadow-black/10">
-      <header class="flex items-center justify-between gap-3 border-b border-zinc-700 bg-zinc-900 px-4 py-3">
-        <div><h3 class="text-sm font-semibold text-zinc-100">{{ phase.label }}</h3>@if (phase.description) { <p class="mt-0.5 text-xs text-zinc-500">{{ phase.description }}</p> }</div>
-      @if (!previewMode()) {
+  @for (phase of section().phases; track phase.id; let phaseIndex = $index) {
+    <section class="overflow-hidden rounded border border-zinc-700 bg-zinc-950 shadow-lg shadow-black/10">
+      <header class="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-700 bg-zinc-900 px-4 py-3">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="grid size-8 shrink-0 place-items-center border border-zinc-700 bg-zinc-950 text-xs font-bold text-blue-300" aria-hidden="true">{{ phaseIndex + 1 }}</span>
+
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="text-sm font-semibold text-zinc-100">{{ phase.label }}</h3>
+
+              <span class="rounded-full border border-zinc-700 bg-zinc-950 px-2 py-0.5 text-[10px] font-semibold text-zinc-400">{{ visiblePhaseRows(phase.id).length }} acciones · {{ phaseProgress(phase.id) }}%</span>
+            </div>
+
+            @if (phase.description) { <p class="mt-0.5 text-xs text-zinc-500">{{ phase.description }}</p> }
+          </div>
+        </div>
+
+        <div class="flex shrink-0 items-center gap-2">
+          <div class="mr-1 hidden h-1.5 w-36 overflow-hidden rounded-full bg-zinc-800 sm:block" role="progressbar" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="phaseProgress(phase.id)" [attr.aria-label]="'Avance de ' + phase.label">
+            <div class="h-full bg-blue-500 transition-[width]" [style.width.%]="phaseProgress(phase.id)"></div>
+          </div>
+
+          @if (!previewMode()) {
 
   <div class="flex items-center gap-2">
 
@@ -239,7 +257,7 @@
         h-9
         items-center
         gap-2
-        rounded-lg
+        rounded-sm
         border
         border-amber-500/30
         bg-amber-500/10
@@ -258,8 +276,8 @@
 
       {{
         showPendingOnly()
-          ? 'View All'
-          : 'Pending Only'
+          ? 'Ver todas'
+          : 'Solo pendientes'
       }}
     </button>
 
@@ -270,7 +288,7 @@
         h-9
         items-center
         gap-2
-        rounded-lg
+        rounded-sm
         border
         border-blue-500/30
         bg-blue-500/10
@@ -287,12 +305,13 @@
         [size]="15"
       />
 
-      Add Action
+      Agregar acción
     </button>
 
   </div>
 
 }
+        </div>
 </header>
       <div class="overflow-x-auto">
         <table class="w-full min-w-[1350px] table-fixed border-collapse text-left">
@@ -306,7 +325,7 @@
               <th class="w-[5%] border-b border-r border-zinc-700 px-3">%</th>
               <th class="w-[12%] border-b border-r border-zinc-700 px-3">Avance</th>
               <th class="w-[20%] border-b border-r border-zinc-700 px-3">Observaciones</th>
-              <th class="w-26 border-b border-zinc-700 px-2">Actions</th>
+              <th class="w-26 border-b border-zinc-700 px-2">Acciones</th>
             </tr>
           </thead>
         <tbody>
@@ -319,7 +338,7 @@
       <td class="border-b border-r border-zinc-700 px-2">
         <div class="flex items-center justify-center gap-1">
           @if (hasSubActions(row.id)) {
-            <button type="button" class="flex size-7 items-center justify-center rounded-md border border-amber-500/40 bg-amber-500/10 text-amber-300 transition hover:border-amber-400 hover:bg-amber-500/20" [title]="isCollapsed(row.id) ? 'Expand Sub Actions' : 'Collapse Sub Actions'" (click)="toggleSubActions(row.id)">
+            <button type="button" class="flex size-7 items-center justify-center rounded-sm border border-amber-500/40 bg-amber-500/10 text-amber-300 transition hover:border-amber-400 hover:bg-amber-500/20" [title]="isCollapsed(row.id) ? 'Expandir subacciones' : 'Contraer subacciones'" (click)="toggleSubActions(row.id)">
               <lucide-icon [img]="isCollapsed(row.id) ? ChevronRight : ChevronDown" [size]="13" />
             </button>
           } @else {
@@ -372,7 +391,7 @@
     focus:ring-inset
     focus:ring-blue-500/40
 
-    [color-scheme:dark]
+    [color-scheme:var(--scheme)]
   "
 >
 
@@ -383,7 +402,7 @@
       text-zinc-400
     "
   >
-    Select...
+    Seleccionar…
   </option>
 
   @for (
@@ -411,20 +430,20 @@
           @for (ecd of row.ecds; track ecd.id) {
             <div class="grid grid-cols-[42px_minmax(112px,1fr)_80px_22px] items-center gap-1">
               <span class="text-[9px] font-semibold text-violet-300">{{ ecd.label }}</span>
-              <input type="date" [disabled]="previewMode()" [ngModel]="ecd.date" (ngModelChange)="updateEcd(row.id,ecd.id,{date:$event})" class="h-7 min-w-0 w-full border-0 border-b bg-transparent px-1 text-[11px] outline-none [color-scheme:dark]" [class.border-emerald-500]="isOnTime(ecd)" [class.text-emerald-300]="isOnTime(ecd)" [class.border-amber-500]="isDueSoon(ecd)" [class.text-amber-300]="isDueSoon(ecd)" [class.border-red-500]="isOverdue(ecd)" [class.text-red-300]="isOverdue(ecd)" />
+              <input type="date" [disabled]="previewMode()" [ngModel]="ecd.date" (ngModelChange)="updateEcd(row.id,ecd.id,{date:$event})" class="h-7 min-w-0 w-full border-0 border-b bg-transparent px-1 text-[11px] outline-none [color-scheme:var(--scheme)]" [class.border-emerald-500]="isOnTime(ecd)" [class.text-emerald-300]="isOnTime(ecd)" [class.border-amber-500]="isDueSoon(ecd)" [class.text-amber-300]="isDueSoon(ecd)" [class.border-red-500]="isOverdue(ecd)" [class.text-red-300]="isOverdue(ecd)" />
               <div class="flex justify-center">
                 @if (isOverdue(ecd)) {
-                  <span class="inline-flex min-w-[74px] justify-center rounded border border-red-500/40 bg-red-500/15 px-1 py-0.5 text-[8px] font-semibold text-red-300">OVERDUE</span>
+                  <span class="inline-flex min-w-[74px] justify-center rounded border border-red-500/40 bg-red-500/15 px-1 py-0.5 text-[8px] font-semibold text-red-300">VENCIDO</span>
                 } @else if (isDueSoon(ecd)) {
-                  <span class="inline-flex min-w-[74px] justify-center rounded border border-amber-500/40 bg-amber-500/15 px-1 py-0.5 text-[8px] font-semibold text-amber-300">DUE SOON</span>
+                  <span class="inline-flex min-w-[74px] justify-center rounded border border-amber-500/40 bg-amber-500/15 px-1 py-0.5 text-[8px] font-semibold text-amber-300">POR VENCER</span>
                 } @else if (isOnTime(ecd)) {
-                  <span class="inline-flex min-w-[74px] justify-center rounded border border-emerald-500/40 bg-emerald-500/15 px-1 py-0.5 text-[8px] font-semibold text-emerald-300">ON TIME</span>
+                  <span class="inline-flex min-w-[74px] justify-center rounded border border-emerald-500/40 bg-emerald-500/15 px-1 py-0.5 text-[8px] font-semibold text-emerald-300">A TIEMPO</span>
                 } @else {
                   <span class="min-w-[74px]"></span>
                 }
               </div>
               @if (!previewMode() && row.ecds.length > 1) {
-                <button type="button" class="grid size-5 place-items-center rounded text-red-400 transition hover:bg-red-950/60 hover:text-red-300" title="Delete ECD" aria-label="Delete ECD" (click)="removeEcd(row.id,ecd.id)">
+                <button type="button" class="grid size-5 place-items-center rounded text-red-400 transition hover:bg-red-950/60 hover:text-red-300" title="Eliminar ECD" aria-label="Eliminar ECD" (click)="removeEcd(row.id,ecd.id)">
                   <lucide-icon [img]="Trash2" [size]="10" />
                 </button>
               } @else {
@@ -435,7 +454,7 @@
         </div>
         @if (!previewMode()) {
           <button type="button" class="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-violet-300 hover:text-violet-200" (click)="addEcd(row.id)">
-            <lucide-icon [img]="CalendarPlus" [size]="11" /> Add ECD
+            <lucide-icon [img]="CalendarPlus" [size]="11" /> Agregar ECD
           </button>
         }
       </td>
@@ -464,10 +483,10 @@
       <td class="border-b border-zinc-700 px-2">
         @if (!previewMode()) {
           <div class="flex items-center justify-center gap-2">
-            <button type="button" class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2 text-[11px] font-semibold text-cyan-300 transition hover:border-cyan-400 hover:bg-cyan-500/20" title="Add Sub Action" aria-label="Add Sub Action" (click)="addSubAction(row)">
+            <button type="button" class="inline-flex h-8 items-center gap-1.5 rounded-sm border border-cyan-500/30 bg-cyan-500/10 px-2 text-[11px] font-semibold text-cyan-300 transition hover:border-cyan-400 hover:bg-cyan-500/20" title="Agregar subacción" aria-label="Agregar subacción" (click)="addSubAction(row)">
               <lucide-icon [img]="GitBranchPlus" [size]="13" /> Sub
             </button>
-            <button type="button" class="inline-flex size-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Delete Action" aria-label="Delete Action" (click)="removeRow(row.id)">
+            <button type="button" class="inline-flex size-8 items-center justify-center rounded-sm border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Eliminar acción" aria-label="Eliminar acción" (click)="removeRow(row.id)">
               <lucide-icon [img]="Trash2" [size]="13" />
             </button>
           </div>
@@ -497,8 +516,8 @@
           </td>
 
           <td class="border-b border-r border-zinc-700 p-0">
-            <select [disabled]="previewMode()" [ngModel]="subAction.responsibleEmail" (ngModelChange)="updateRow(subAction.id,{responsibleEmail:$event})" class="h-14 w-full border-0 bg-transparent px-3 text-sm text-zinc-100 outline-none focus:bg-blue-950/15 focus:ring-2 focus:ring-inset focus:ring-blue-500/40">
-              <option value="">Select...</option>
+            <select [disabled]="previewMode()" [ngModel]="subAction.responsibleEmail" (ngModelChange)="updateRow(subAction.id,{responsibleEmail:$event})" class="h-14 w-full border-0 bg-transparent px-3 text-sm text-zinc-100 outline-none focus:bg-blue-950/15 focus:ring-2 focus:ring-inset focus:ring-blue-500/40 [color-scheme:var(--scheme)]">
+              <option value="">Seleccionar…</option>
               @for (email of currentValue().involvedEmails; track email) {
                 <option [value]="email">{{ displayName(email) }}</option>
               }
@@ -510,20 +529,20 @@
               @for (ecd of subAction.ecds; track ecd.id) {
                 <div class="grid grid-cols-[42px_minmax(112px,1fr)_80px_22px] items-center gap-1">
                   <span class="text-[9px] font-semibold text-violet-300">{{ ecd.label }}</span>
-                  <input type="date" [disabled]="previewMode()" [ngModel]="ecd.date" (ngModelChange)="updateEcd(subAction.id,ecd.id,{date:$event})" class="h-7 min-w-0 w-full border-0 border-b bg-transparent px-1 text-[11px] outline-none [color-scheme:dark]" [class.border-emerald-500]="isOnTime(ecd)" [class.text-emerald-300]="isOnTime(ecd)" [class.border-amber-500]="isDueSoon(ecd)" [class.text-amber-300]="isDueSoon(ecd)" [class.border-red-500]="isOverdue(ecd)" [class.text-red-300]="isOverdue(ecd)" />
+                  <input type="date" [disabled]="previewMode()" [ngModel]="ecd.date" (ngModelChange)="updateEcd(subAction.id,ecd.id,{date:$event})" class="h-7 min-w-0 w-full border-0 border-b bg-transparent px-1 text-[11px] outline-none [color-scheme:var(--scheme)]" [class.border-emerald-500]="isOnTime(ecd)" [class.text-emerald-300]="isOnTime(ecd)" [class.border-amber-500]="isDueSoon(ecd)" [class.text-amber-300]="isDueSoon(ecd)" [class.border-red-500]="isOverdue(ecd)" [class.text-red-300]="isOverdue(ecd)" />
                   <div class="flex justify-center">
                     @if (isOverdue(ecd)) {
-                      <span class="inline-flex min-w-[74px] justify-center rounded border border-red-500/40 bg-red-500/15 px-1 py-0.5 text-[8px] font-semibold text-red-300">OVERDUE</span>
+                      <span class="inline-flex min-w-[74px] justify-center rounded border border-red-500/40 bg-red-500/15 px-1 py-0.5 text-[8px] font-semibold text-red-300">VENCIDO</span>
                     } @else if (isDueSoon(ecd)) {
-                      <span class="inline-flex min-w-[74px] justify-center rounded border border-amber-500/40 bg-amber-500/15 px-1 py-0.5 text-[8px] font-semibold text-amber-300">DUE SOON</span>
+                      <span class="inline-flex min-w-[74px] justify-center rounded border border-amber-500/40 bg-amber-500/15 px-1 py-0.5 text-[8px] font-semibold text-amber-300">POR VENCER</span>
                     } @else if (isOnTime(ecd)) {
-                      <span class="inline-flex min-w-[74px] justify-center rounded border border-emerald-500/40 bg-emerald-500/15 px-1 py-0.5 text-[8px] font-semibold text-emerald-300">ON TIME</span>
+                      <span class="inline-flex min-w-[74px] justify-center rounded border border-emerald-500/40 bg-emerald-500/15 px-1 py-0.5 text-[8px] font-semibold text-emerald-300">A TIEMPO</span>
                     } @else {
                       <span class="min-w-[74px]"></span>
                     }
                   </div>
                   @if (!previewMode() && subAction.ecds.length > 1) {
-                    <button type="button" class="grid size-5 place-items-center rounded text-red-400 transition hover:bg-red-950/60 hover:text-red-300" title="Delete ECD" aria-label="Delete ECD" (click)="removeEcd(subAction.id,ecd.id)">
+                    <button type="button" class="grid size-5 place-items-center rounded text-red-400 transition hover:bg-red-950/60 hover:text-red-300" title="Eliminar ECD" aria-label="Eliminar ECD" (click)="removeEcd(subAction.id,ecd.id)">
                       <lucide-icon [img]="Trash2" [size]="10" />
                     </button>
                   } @else {
@@ -534,7 +553,7 @@
             </div>
             @if (!previewMode()) {
               <button type="button" class="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-violet-300 hover:text-violet-200" (click)="addEcd(subAction.id)">
-                <lucide-icon [img]="CalendarPlus" [size]="11" /> Add ECD
+                <lucide-icon [img]="CalendarPlus" [size]="11" /> Agregar ECD
               </button>
             }
           </td>
@@ -559,7 +578,7 @@
           <td class="border-b border-zinc-700 px-2">
             @if (!previewMode()) {
               <div class="flex items-center justify-center">
-                <button type="button" class="inline-flex size-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Delete Sub Action" aria-label="Delete Sub Action" (click)="removeRow(subAction.id)">
+                <button type="button" class="inline-flex size-8 items-center justify-center rounded-sm border border-red-500/20 bg-red-500/10 text-red-400 transition hover:border-red-400 hover:bg-red-500/20" title="Eliminar subacción" aria-label="Eliminar subacción" (click)="removeRow(subAction.id)">
                   <lucide-icon [img]="Trash2" [size]="13" />
                 </button>
               </div>
@@ -570,7 +589,7 @@
     }
   } @empty {
     <tr>
-      <td colspan="8" class="border-b border-zinc-700 px-5 py-10 text-center text-sm text-zinc-500">No actions available.</td>
+      <td colspan="8" class="border-b border-zinc-700 px-5 py-10 text-center text-sm text-zinc-500">Sin acciones en esta fase.</td>
     </tr>
   }
 </tbody>

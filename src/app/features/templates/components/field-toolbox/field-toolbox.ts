@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component,
   input,
   output
@@ -72,16 +72,16 @@ interface ToolboxItem {
             type="button"
             cdkDrag
             [cdkDragData]="item.type"
-            class="group flex w-full cursor-grab items-start gap-3 rounded-2xl border border-zinc-800 bg-zinc-950 p-3 text-left outline-none transition hover:border-blue-500/60 hover:bg-blue-950/20 focus-visible:ring-2 focus-visible:ring-blue-500 active:cursor-grabbing"
+            class="group flex w-full cursor-grab items-start gap-3 rounded border border-zinc-800 bg-zinc-950 p-3 text-left outline-none transition hover:border-blue-500/60 hover:bg-blue-950/20 focus-visible:ring-2 focus-visible:ring-blue-500 active:cursor-grabbing"
             [attr.aria-label]="'Agregar campo ' + item.label"
             (click)="add.emit(item.type)"
           >
             <div
               *cdkDragPreview
-              class="flex w-60 items-center gap-3 rounded-2xl border border-blue-500/60 bg-zinc-900 p-3 text-zinc-100 shadow-2xl shadow-black/40"
+              class="flex w-60 items-center gap-3 rounded border border-blue-500/60 bg-zinc-900 p-3 text-zinc-100 shadow-2xl shadow-black/40"
             >
               <span
-                class="grid size-10 shrink-0 place-items-center rounded-xl bg-blue-500/10 text-blue-300"
+                class="grid size-10 shrink-0 place-items-center rounded bg-blue-500/10 text-blue-300"
                 aria-hidden="true"
               >
                 <lucide-icon
@@ -103,7 +103,7 @@ interface ToolboxItem {
             </div>
 
             <span
-              class="grid size-10 shrink-0 place-items-center rounded-xl bg-zinc-800 text-zinc-400 transition group-hover:bg-blue-500/10 group-hover:text-blue-300"
+              class="grid size-10 shrink-0 place-items-center rounded bg-zinc-800 text-zinc-400 transition group-hover:bg-blue-500/10 group-hover:text-blue-300"
               aria-hidden="true"
             >
               <lucide-icon

@@ -1,7 +1,7 @@
-<article
+﻿<article
   class="
     group
-    rounded-2xl
+    rounded
     border border-zinc-800
     bg-zinc-950
     p-4
@@ -13,7 +13,7 @@
 <button
   type="button"
   cdkDragHandle
-  class="grid size-9 shrink-0 cursor-grab place-items-center rounded-lg bg-zinc-800 text-zinc-400 outline-none transition hover:bg-zinc-700 hover:text-zinc-200 focus-visible:ring-2 focus-visible:ring-blue-500 active:cursor-grabbing"
+  class="grid size-9 shrink-0 cursor-grab place-items-center rounded-sm bg-zinc-800 text-zinc-400 outline-none transition hover:bg-zinc-700 hover:text-zinc-200 focus-visible:ring-2 focus-visible:ring-blue-500 active:cursor-grabbing"
   [attr.aria-label]="
     'Mover pregunta ' + (index() + 1)
   "
@@ -32,7 +32,7 @@
         h-11
         min-w-0
         flex-1
-        rounded-xl
+        rounded
         border border-zinc-700
         bg-zinc-900
         px-3
@@ -51,7 +51,7 @@
       class="
         grid size-10
         place-items-center
-        rounded-xl
+        rounded
         border border-red-900/70
         text-red-400
         transition
@@ -75,7 +75,7 @@
           mt-1.5
           h-11
           w-full
-          rounded-xl
+          rounded
           border border-zinc-700
           bg-zinc-900
           px-3
@@ -123,11 +123,11 @@
   Ancho del campo
 
   <div
-    class="mt-1.5 grid h-11 grid-cols-2 rounded-xl border border-zinc-700 bg-zinc-900 p-1"
+    class="mt-1.5 grid h-11 grid-cols-2 rounded border border-zinc-700 bg-zinc-900 p-1"
   >
     <button
       type="button"
-      class="rounded-lg px-3 text-xs font-medium transition"
+      class="rounded-sm px-3 text-xs font-medium transition"
       [class.bg-blue-600]="
         field().layout === 'half'
       "
@@ -147,7 +147,7 @@
 
     <button
       type="button"
-      class="rounded-lg px-3 text-xs font-medium transition"
+      class="rounded-sm px-3 text-xs font-medium transition"
       [class.bg-blue-600]="
         (field().layout ?? 'full') === 'full'
       "
@@ -182,7 +182,7 @@
           mt-1.5
           h-11
           w-full
-          rounded-xl
+          rounded
           border border-zinc-700
           bg-zinc-900
           px-3
@@ -216,7 +216,7 @@
           mt-1.5
           h-11
           w-full
-          rounded-xl
+          rounded
           border border-zinc-700
           bg-zinc-900
           px-3
@@ -264,7 +264,7 @@
       class="
         mt-1.5
         w-full
-        rounded-xl
+        rounded
         border
         border-zinc-700
         bg-zinc-900
@@ -294,7 +294,7 @@
         flex
         items-center
         gap-3
-        rounded-xl
+        rounded
         border border-zinc-800
         bg-zinc-900
         px-3
@@ -322,7 +322,7 @@
         flex
         items-center
         gap-3
-        rounded-xl
+        rounded
         border border-zinc-800
         bg-zinc-900
         px-3
@@ -353,7 +353,7 @@
     <section
       class="
         mt-4
-        rounded-2xl
+        rounded
         border border-blue-900/60
         bg-blue-950/20
         p-4
@@ -397,7 +397,7 @@
               mt-1.5
               h-11
               w-full
-              rounded-xl
+              rounded
               border border-zinc-700
               bg-zinc-900
               px-3
@@ -448,7 +448,7 @@
               mt-1.5
               h-11
               w-full
-              rounded-xl
+              rounded
               border border-zinc-700
               bg-zinc-900
               px-3
@@ -482,7 +482,7 @@
               mt-1.5
               h-11
               w-full
-              rounded-xl
+              rounded
               border border-zinc-700
               bg-zinc-900
               px-3
@@ -499,7 +499,7 @@
           flex
           items-center
           gap-3
-          rounded-xl
+          rounded
           border border-zinc-800
           bg-zinc-900
           px-3

@@ -114,6 +114,27 @@ readonly GitBranchPlus = GitBranchPlus;
     return Math.round(total / rows.length);
   });
 
+  phaseProgress(phaseId: string): number {
+    const rows =
+      this.currentValue().rows.filter(
+        row =>
+          row.phaseId === phaseId &&
+          !row.parentId
+      );
+
+    if (rows.length === 0) {
+      return 0;
+    }
+
+    const total = rows.reduce(
+      (sum, row) =>
+        sum + this.displayProgress(row),
+      0
+    );
+
+    return Math.round(total / rows.length);
+  }
+
   addInvolvedEmail(rawValue: string): void {
     if (this.previewMode()) {
       return;

@@ -1,4 +1,4 @@
-@if (loading()) {
+﻿@if (loading()) {
   <div class="grid min-h-[60vh] place-items-center px-6">
     <div class="text-center">
       <div
@@ -12,9 +12,9 @@
     </div>
   </div>
 } @else if (template(); as currentTemplate) {
-  <div class="-m-5 min-h-screen bg-zinc-950 md:-m-7 xl:-m-8">
+  <div class="min-h-full bg-zinc-950">
     @if (errorMessage()) {
-      <div class="mx-auto max-w-[1800px] px-4 pt-5 sm:px-6 lg:px-8">
+      <div class="px-4 pt-5 sm:px-6 lg:px-8">
         <div
           role="alert"
           aria-live="assertive"
@@ -56,7 +56,7 @@
   <div class="grid min-h-[60vh] place-items-center px-6">
     <div
       role="alert"
-      class="max-w-lg rounded-2xl border border-red-900 bg-red-950/30 p-5 text-sm text-red-200"
+      class="max-w-lg rounded border border-red-900 bg-red-950/30 p-5 text-sm text-red-200"
     >
       {{ errorMessage() || 'No se pudo cargar la plantilla.' }}
     </div>

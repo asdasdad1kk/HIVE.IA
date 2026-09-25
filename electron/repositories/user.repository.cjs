@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 const ADMIN_FILE =
-  'G:\\Share\\PANIAGUA DANIEL\\checklist\\admins.txt';
+  'D:\HIVE\electron\admins.txt';
 
 function isAdmin(employeeNumber) {
   try {

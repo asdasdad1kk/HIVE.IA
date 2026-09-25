@@ -1,6 +1,380 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+
+/* =========================
+   DESIGN TOKENS
+   Las escalas de color de Tailwind se remapean a variables de tema,
+   de modo que TODA la aplicación (layout, páginas, editores, dialogs)
+   cambia de tema sin tocar cada clase.
+   - :root / .theme-slate   => TEMA CLARO
+   - .theme-zinc            => TEMA OSCURO
+========================= */
+
+:root,
+:root.theme-slate {
+  color-scheme: light;
+  --scheme: light;
+
+  /* zinc cálido (crema) */
+  --z50: #faf7f1;
+  --z100: #201c14;
+  --z200: #2f2a20;
+  --z300: #464033;
+  --z400: #655c4a;
+  --z500: #7f7560;
+  --z600: #aaa08a;
+  --z700: #d3c5a5;
+  --z800: #e3d8bf;
+  --z900: #fffdf7;
+  --z950: #f4f0e6;
+
+  /* blue (acento único) */
+  --b300: #4f8df2;
+  --b400: #3b82f6;
+  --b500: #3b82f6;
+  --b600: #2563eb;
+  --b700: #1d4ed8;
+  --b900: #1e40af;
+  --b950: #172554;
+
+  /* violet (solo editores de fórmulas) */
+  --v200: #8b5cf6;
+  --v300: #7c3aed;
+  --v400: #6d28d9;
+  --v500: #8b5cf6;
+  --v600: #7c3aed;
+
+  /* emerald (estado: completado) */
+  --e200: #10b981;
+  --e300: #059669;
+  --e400: #10b981;
+  --e500: #10b981;
+  --e600: #059669;
+  --e800: #047857;
+  --e950: #022c22;
+
+  /* amber (estado: borrador) */
+  --a200: #f59e0b;
+  --a300: #d97706;
+  --a400: #f59e0b;
+  --a500: #f59e0b;
+  --a600: #d97706;
+  --a800: #d97706;
+  --a900: #b45309;
+  --a950: #fef3c7;
+
+  /* red (estado: cancelado / peligro) */
+  --r200: #ef4444;
+  --r300: #dc2626;
+  --r400: #ef4444;
+  --r500: #ef4444;
+  --r600: #dc2626;
+  --r700: #b91c1c;
+  --r900: #991b1b;
+  --r950: #7f1d1d;
+
+  /* cyan (gráficas y sub-acciones) */
+  --c200: #06b6d4;
+  --c300: #0891b2;
+  --c400: #06b6d4;
+  --c500: #06b6d4;
+  --c600: #0891b2;
+
+  /* superficie genérica (titlebar) */
+  --bg-primary: #fffdf7;
+  --bg-secondary: #ece4d2;
+  --bg-tertiary: #e2d7bd;
+  --border-color: #e7dfcc;
+  --text-primary: #201c14;
+  --text-secondary: #655c4a;
+  --text-muted: #aaa08a;
+  --hover-bg: #ece4d2;
+  --active-start: rgb(59 130 246 / 12%);
+  --active-end: rgb(255 253 247 / 80%);
+
+  /* sidebar navy empresarial */
+  --sidebar-bg: #0a1830;
+  --sidebar-surface: #10233f;
+  --sidebar-border: #1a2f4f;
+  --sidebar-text: #f3f6fb;
+  --sidebar-secondary: #93a5bf;
+  --sidebar-muted: #5f7392;
+  --sidebar-hover-bg: #14273f;
+  --sidebar-hover-border: #23405f;
+  --sidebar-hover-text: #ffffff;
+  --sidebar-active-start: rgb(59 130 246 / 22%);
+  --sidebar-active-end: rgb(16 35 63 / 70%);
+  --sidebar-active-text: #ffffff;
+  --sidebar-danger-hover: rgb(239 68 68 / 14%);
+
+  /* titlebar azul gulfstream */
+  --titlebar-bg: #0a1830;
+  --titlebar-border: #10233f;
+  --titlebar-ink: #f3f6fb;
+  --titlebar-dim: #93a5bf;
+  --titlebar-hover: #15294a;
+  --titlebar-rule: #1d3355;
+}
+
+:root.theme-zinc {
+  color-scheme: dark;
+  --scheme: dark;
+
+  /* zinc */
+  --z50: #fafafa;
+  --z100: #f4f4f5;
+  --z200: #e4e4e7;
+  --z300: #d4d4d8;
+  --z400: #a1a1aa;
+  --z500: #71717a;
+  --z600: #52525b;
+  --z700: #3f3f46;
+  --z800: #27272a;
+  --z900: #18181b;
+  --z950: #0b0b0e;
+
+  /* blue */
+  --b300: #93c5fd;
+  --b400: #60a5fa;
+  --b500: #3b82f6;
+  --b600: #2563eb;
+  --b700: #1d4ed8;
+  --b900: #1e3a8a;
+  --b950: #172554;
+
+  /* violet */
+  --v200: #ddd6fe;
+  --v300: #c4b5fd;
+  --v400: #a78bfa;
+  --v500: #8b5cf6;
+  --v600: #7c3aed;
+
+  /* emerald */
+  --e200: #a7f3d0;
+  --e300: #6ee7b7;
+  --e400: #34d399;
+  --e500: #10b981;
+  --e600: #059669;
+  --e800: #065f46;
+  --e950: #022c22;
+
+  /* amber */
+  --a200: #fde68a;
+  --a300: #fcd34d;
+  --a400: #fbbf24;
+  --a500: #f59e0b;
+  --a600: #d97706;
+  --a800: #92400e;
+  --a900: #78350f;
+  --a950: #451a03;
+
+  /* red */
+  --r200: #fecaca;
+  --r300: #fca5a5;
+  --r400: #f87171;
+  --r500: #ef4444;
+  --r600: #dc2626;
+  --r700: #b91c1c;
+  --r900: #7f1d1d;
+  --r950: #450a0a;
+
+  /* cyan */
+  --c200: #a5f3fc;
+  --c300: #67e8f9;
+  --c400: #22d3ee;
+  --c500: #06b6d4;
+  --c600: #0891b2;
+
+  /* superficie genérica */
+  --bg-primary: #0b0b0e;
+  --bg-secondary: #18181b;
+  --bg-tertiary: #27272a;
+  --border-color: #27272a;
+  --text-primary: #f4f4f5;
+  --text-secondary: rgb(127 127 129 / 65%);
+  --text-muted: #71717a;
+  --hover-bg: #27272a;
+  --active-start: rgb(37 99 235 / 18%);
+  --active-end: rgb(24 24 27 / 80%);
+
+  /* sidebar */
+  --sidebar-bg: #0b0b0e;
+  --sidebar-surface: #18181b;
+  --sidebar-border: #27272a;
+  --sidebar-text: #f4f4f5;
+  --sidebar-secondary: #71717a;
+  --sidebar-muted: #52525b;
+  --sidebar-hover-bg: #18181b;
+  --sidebar-hover-border: #27272a;
+  --sidebar-hover-text: #f4f4f5;
+  --sidebar-active-start: rgb(37 99 235 / 18%);
+  --sidebar-active-end: rgb(24 24 27 / 80%);
+  --sidebar-active-text: #ffffff;
+  --sidebar-danger-hover: rgb(69 10 10 / 40%);
+
+  /* titlebar sobrio (tema oscuro) */
+  --titlebar-bg: #0b0b0e;
+  --titlebar-border: #27272a;
+  --titlebar-ink: #f4f4f5;
+  --titlebar-dim: #71717a;
+  --titlebar-hover: #27272a;
+  --titlebar-rule: #27272a;
+}
+
+/* =========================
+   MAPEO TAILWIND -> TOKENS
+   Utils como bg-zinc-950, text-zinc-100, border-zinc-800, text-blue-300...
+   pasan a resolverse según el tema activo.
+========================= */
+
+@theme inline {
+  --color-zinc-50: var(--z50);
+  --color-zinc-100: var(--z100);
+  --color-zinc-200: var(--z200);
+  --color-zinc-300: var(--z300);
+  --color-zinc-400: var(--z400);
+  --color-zinc-500: var(--z500);
+  --color-zinc-600: var(--z600);
+  --color-zinc-700: var(--z700);
+  --color-zinc-800: var(--z800);
+  --color-zinc-900: var(--z900);
+  --color-zinc-950: var(--z950);
+
+  --color-blue-300: var(--b300);
+  --color-blue-400: var(--b400);
+  --color-blue-500: var(--b500);
+  --color-blue-600: var(--b600);
+  --color-blue-700: var(--b700);
+  --color-blue-900: var(--b900);
+  --color-blue-950: var(--b950);
+
+  --color-violet-200: var(--v200);
+  --color-violet-300: var(--v300);
+  --color-violet-400: var(--v400);
+  --color-violet-500: var(--v500);
+  --color-violet-600: var(--v600);
+
+  --color-emerald-200: var(--e200);
+  --color-emerald-300: var(--e300);
+  --color-emerald-400: var(--e400);
+  --color-emerald-500: var(--e500);
+  --color-emerald-600: var(--e600);
+  --color-emerald-800: var(--e800);
+  --color-emerald-950: var(--e950);
+
+  --color-amber-200: var(--a200);
+  --color-amber-300: var(--a300);
+  --color-amber-400: var(--a400);
+  --color-amber-500: var(--a500);
+  --color-amber-600: var(--a600);
+  --color-amber-800: var(--a800);
+  --color-amber-900: var(--a900);
+  --color-amber-950: var(--a950);
+
+  --color-red-200: var(--r200);
+  --color-red-300: var(--r300);
+  --color-red-400: var(--r400);
+  --color-red-500: var(--r500);
+  --color-red-600: var(--r600);
+  --color-red-700: var(--r700);
+  --color-red-900: var(--r900);
+  --color-red-950: var(--r950);
+
+  --color-cyan-200: var(--c200);
+  --color-cyan-300: var(--c300);
+  --color-cyan-400: var(--c400);
+  --color-cyan-500: var(--c500);
+  --color-cyan-600: var(--c600);
+}
+
+/* =========================
+   BASE / TYPOGRAPHY
+========================= */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--z950);
+  color: var(--z100);
+  font-family:
+    'Segoe UI Variable Text',
+    'Segoe UI Variable Display',
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv05', 'cv11';
+}
+
+:root.theme-slate,
+:root,
+:root.theme-zinc {
+  --font-sans:
+    'Segoe UI Variable Text',
+    'Segoe UI Variable Display',
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  --font-mono:
+    'Cascadia Code',
+    'SFMono-Regular',
+    Consolas,
+    'Liberation Mono',
+    monospace;
+}
+
+::selection {
+  background: rgb(59 130 246 / 28%);
+  color: var(--z100);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.app-drag-region {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.app-no-drag,
+.app-drag-region button,
+.app-drag-region a,
+.app-drag-region input {
+  -webkit-app-region: no-drag;
+}
+
+/* =========================
+   OVERLAYS / DIALOGS
+========================= */
+
 .checklist-dialog-backdrop {
   background: rgb(0 0 0 / 72%);
   backdrop-filter: blur(6px);
@@ -36,117 +410,9 @@
 .cdk-overlay-backdrop {
   pointer-events: auto;
 }
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  margin: 0;
-  background: #09090b;
-}
-
-app-root {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.app-drag-region {
-  -webkit-app-region: drag;
-  user-select: none;
-}
-
-.app-no-drag,
-.app-drag-region button,
-.app-drag-region a,
-.app-drag-region input {
-  -webkit-app-region: no-drag;
-}
-
-.sidebar-link-active {
-  border-color: rgb(39 39 42);
-  background:
-    linear-gradient(
-      90deg,
-      rgb(37 99 235 / 18%),
-      rgb(24 24 27 / 80%)
-    );
-  color: rgb(255 255 255);
-  box-shadow:
-    inset 3px 0 0 rgb(59 130 246);
-}
-
-.sidebar-link-active lucide-icon {
-  color: rgb(96 165 250);
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color:
-    rgb(63 63 70)
-    transparent;
-}
-
-*::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgb(63 63 70);
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background: rgb(82 82 91);
-}
-/* =========================
-   THEMES
-========================= */
-
-:root.theme-zinc {
-  --bg-primary: rgb(9 9 11);
-  --bg-secondary: rgb(24 24 27);
-  --bg-tertiary: rgb(39 39 42);
-
-  --border-color: rgb(39 39 42);
-
-  --text-primary: rgb(244 244 245);
-  --text-secondary: rgba(127, 127, 129, 0.658);
-  --text-muted: rgb(113 113 122);
-
-  --hover-bg: rgb(39 39 42);
-
-  --active-start: rgb(37 99 235 / 18%);
-  --active-end: rgb(24 24 27 / 80%);
-}
-
-:root.theme-slate {
-  --bg-primary: rgb(10, 23, 83);
-  --bg-secondary: rgb(15 23 42);
-  --bg-tertiary: rgb(30 41 59);
-  
-  --border-color: rgb(51 65 85);
-
-  --text-primary: rgb(241 245 249);
-  --text-secondary: rgb(148 163 184);
-  --text-muted: rgb(100 116 139);
-
-  --hover-bg: rgb(30 41 59);
-
-  --active-start: rgb(37 99 235 / 20%);
-  --active-end: rgb(15 23 42 / 80%);
-}
 
 /* =========================
-   GENERIC CLASSES
+   GENERIC THEME CLASSES
 ========================= */
 
 .theme-bg-primary {
@@ -177,62 +443,55 @@ app-root {
   color: var(--text-muted);
 }
 
+/* ========================================
+   TITLEBAR (azul gulfstream en claro)
+======================================== */
 
-:root,
-:root.theme-zinc {
-  --sidebar-bg: rgb(9 9 11);
-  --sidebar-surface: rgb(24 24 27);
-  --sidebar-border: rgb(39 39 42);
-
-  --sidebar-text: rgb(244 244 245);
-  --sidebar-secondary: rgb(113 113 122);
-  --sidebar-muted: rgb(82 82 91);
-
-  --sidebar-hover-bg: rgb(24 24 27);
-  --sidebar-hover-border: rgb(39 39 42);
-  --sidebar-hover-text: rgb(244 244 245);
-
-  --sidebar-active-start: rgb(37 99 235 / 18%);
-  --sidebar-active-end: rgb(24 24 27 / 80%);
-  --sidebar-active-text: rgb(255 255 255);
-
-  --sidebar-danger-hover: rgb(69 10 10 / 40%);
+.titlebar {
+  background-color: var(--titlebar-bg);
+  border-color: var(--titlebar-border);
+  color: var(--titlebar-ink);
 }
 
-:root.theme-slate {
+.tb-ink {
+  color: var(--titlebar-ink);
+}
 
-  /* fondo general */
-  --sidebar-bg: rgb(242 240 236);
+.tb-dim {
+  color: var(--titlebar-dim);
+}
 
-  /* superficies */
-  --sidebar-surface: rgb(249 248 246);
+.tb-rule {
+  background-color: var(--titlebar-rule);
+}
 
-  /* bordes */
-  --sidebar-border: rgb(210 205 196);
+.tb-btn {
+  color: var(--titlebar-dim);
+}
 
-  /* texto */
-  --sidebar-text: rgb(37 43 54);
+.tb-btn:hover {
+  background-color: var(--titlebar-hover);
+  color: var(--titlebar-ink);
+}
 
-  --sidebar-secondary: rgb(91 98 112);
+.tb-close:hover {
+  background-color: #dc2626;
+  color: #ffffff;
+}
 
-  --sidebar-muted: rgb(125 131 143);
+/* ========================================
+   TEXTURA SUTIL (grano sobre el canvas)
+======================================== */
 
-  /* hover */
-  --sidebar-hover-bg: rgb(231 227 219);
-
-  --sidebar-hover-border: rgb(189 184 174);
-
-  --sidebar-hover-text: rgb(27 33 44);
-
-  /* activo */
-  --sidebar-active-start: rgb(216 226 239);
-
-  --sidebar-active-end: rgb(225 233 244);
-
-  --sidebar-active-text: rgb(23 50 91);
-
-  /* danger */
-  --sidebar-danger-hover: rgb(248 224 224);
+.app-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
 }
 
 /* ========================================
@@ -267,15 +526,9 @@ app-root {
   color: var(--sidebar-muted);
 }
 
-/* En Zinc equivale a:
-   text-zinc-500
-   hover:border-zinc-800
-   hover:bg-zinc-900
-   hover:text-zinc-100
-*/
-
 .sidebar-link {
   border-color: transparent;
+  border-radius: 4px;
   color: var(--sidebar-secondary);
 }
 
@@ -289,36 +542,27 @@ app-root {
   color: var(--sidebar-secondary);
 }
 
-/* Mismo activo oscuro original:
-   zinc-800 + gradiente azul/zinc + línea azul
-*/
-
 .sidebar-link-active {
   border-color: var(--sidebar-border);
-
   background:
     linear-gradient(
       90deg,
       var(--sidebar-active-start),
       var(--sidebar-active-end)
     );
-
   color: var(--sidebar-active-text);
-
   box-shadow:
     inset 3px 0 0 rgb(59 130 246);
 }
 
 .sidebar-link-active:hover {
   border-color: var(--sidebar-border);
-
   background:
     linear-gradient(
       90deg,
       var(--sidebar-active-start),
       var(--sidebar-active-end)
     );
-
   color: var(--sidebar-active-text);
 }
 
@@ -332,6 +576,7 @@ app-root {
     var(--sidebar-surface) 60%,
     transparent
   );
+  border-radius: 4px;
   border-color: var(--sidebar-border);
   color: var(--sidebar-secondary);
 }
@@ -351,9 +596,7 @@ app-root {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color:
-    rgb(63 63 70)
-    transparent;
+  scrollbar-color: var(--z700) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -367,97 +610,9 @@ app-root {
 
 *::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: rgb(63 63 70);
+  background: var(--z700);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgb(82 82 91);
-}
-.quick-create-btn {
-  display: flex;
-  align-items: center;
-
-  width: 100%;
-  height: 56px;
-
-  padding: 0 14px;
-
-  gap: 12px;
-
-  border-radius: 14px;
-
-  border: 1px solid rgba(255, 255, 255, 0.06);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(24, 30, 48, 0.95),
-      rgba(15, 20, 34, 0.95)
-    );
-
-  color: #fff;
-
-  transition: all .18s ease;
-}
-
-.quick-create-btn:hover {
-  border-color: rgba(59, 130, 246, 0.3);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(28, 36, 58, 0.98),
-      rgba(18, 25, 42, 0.98)
-    );
-
-  box-shadow:
-    0 0 0 1px rgba(59,130,246,.12),
-    0 10px 25px rgba(0,0,0,.28);
-}
-
-.quick-create-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 32px;
-  height: 32px;
-
-  flex-shrink: 0;
-
-  border-radius: 10px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #2563eb,
-      #4f46e5
-    );
-
-  color: white;
-}
-
-.quick-create-title {
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.quick-create-subtitle {
-  margin-top: 4px;
-
-  font-size: 11px;
-
-  color: rgb(148 163 184);
-}
-
-.quick-create-arrow {
-  opacity: 0;
-
-  transition: all .18s ease;
-}
-
-.quick-create-btn:hover .quick-create-arrow {
-  opacity: .8;
-  transform: translateX(4px);
+  background: var(--z600);
 }

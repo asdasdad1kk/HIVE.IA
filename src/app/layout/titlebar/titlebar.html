@@ -1,14 +1,13 @@
-<header
+﻿<header
   class="
     app-drag-region
-    theme-bg-primary
-    theme-border
+    titlebar
     relative z-50
-    flex h-12
+    flex h-11
     shrink-0
     items-center
     border-b
-    pl-4
+    px-4
     backdrop-blur-xl
   "
 >
@@ -18,42 +17,26 @@
     <img
       [src]="applicationLogo"
       alt="HIVE AI"
-      class="h-12 w-12"
+      class="h-7 w-7 shrink-0 rounded-sm"
+      draggable="false"
     />
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2.5">
+      <span
+        class="tb-ink text-xs font-semibold tracking-[0.14em]"
+      >
+        HIVE<span class="text-blue-500">.AI</span>
+      </span>
 
       <span
-        class="
-          text-xs
-          font-semibold
-          text-zinc-200
-
-          theme-slate:text-slate-100
-        "
-      >
-        HIVE.AI
-      </span>
-       <span
-        class="
-          hidden
-          h-3 w-px
-          bg-zinc-700
-          sm:block
-        "
+        class="tb-rule hidden h-3.5 w-px sm:block"
       ></span>
+
       <span
-        class="
-          hidden
-          text-[11px]
-          text-zinc-500
-
-          md:block
-        "
+        class="tb-dim hidden text-[11px] md:block"
       >
-        Human Integrated Verification Engine
+        Checklist Studio
       </span>
-
     </div>
 
   </div>
@@ -67,198 +50,178 @@
     "
   >
     <div
-  class="
-    app-no-drag
-    mr-3
-    hidden
-    lg:flex
-  "
->
-  <button
-    type="button"
-    cdkOverlayOrigin
-    #userOrigin="cdkOverlayOrigin"
-    (mouseenter)="userTooltipOpen.set(true)"
-    (mouseleave)="userTooltipOpen.set(false)"
-    class="
-      flex h-12 w-12
-      items-center
-      justify-center
-      rounded-full
-      
-      transition-all
-     
-    "
-  >
-  <div
-
-class="
-
-flex h-7 w-7
-
-items-center
-
-justify-center
-
-rounded-full
-
-border border-emerald-900/70
-      bg-emerald-500/10
-      text-emerald-300
- hover:border-emerald-500/40
-      hover:bg-emerald-500/15
-"
->
-    <lucide-icon
-      [img]="userIcon"
-      class="h-4 w-4"
-    /></div>
-  </button>
-
-  <ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="userOrigin"
-    [cdkConnectedOverlayOpen]="userTooltipOpen()"
-    [cdkConnectedOverlayPositions]="[
-      {
-        originX: 'end',
-        originY: 'bottom',
-        overlayX: 'end',
-        overlayY: 'top',
-        offsetY: 8
-      }
-    ]"
-  >
-    <div
-      (mouseenter)="userTooltipOpen.set(true)"
-      (mouseleave)="userTooltipOpen.set(false)"
       class="
-        w-72
-        rounded-xl
-        border border-zinc-800
-        bg-zinc-950/95
-        p-4
-        shadow-2xl
-        backdrop-blur-xl
+        app-no-drag
+        mr-2
+        hidden
+        items-center
+        lg:flex
       "
     >
-      @if (auth.loading()) {
-        <div class="text-sm text-zinc-400">
-          Cargando usuario...
-        </div>
-      } @else {
-        <div class="mb-3 flex items-center gap-3">
-          <div
-            class="
-              flex h-10 w-10
-              items-center
-              justify-center
-              rounded-full
-              bg-emerald-500/15
-              text-emerald-400
-            "
-          >
-            <lucide-icon
-              [img]="userIcon"
-              class="h-5 w-5"
-            />
-          </div>
+      <button
+        type="button"
+        cdkOverlayOrigin
+        #userOrigin="cdkOverlayOrigin"
+        (mouseenter)="userTooltipOpen.set(true)"
+        (mouseleave)="userTooltipOpen.set(false)"
+        class="
+          tb-btn
+          flex h-8
+          items-center
+          justify-center
+          rounded-full
+          border border-white/15
+          bg-white/5
+          px-2.5
+          transition
+        "
+        [title]="auth.user()?.name ?? 'Usuario'"
+      >
+        <lucide-icon
+          [img]="userIcon"
+          class="h-4 w-4"
+        />
+      </button>
 
-          <div>
-            <p
-              class="
-                text-sm
-                font-semibold
-                text-zinc-100
-              "
-            >
-              {{ auth.user()?.name }}
-            </p>
-
-            <p
-              class="
-                text-xs
-                text-zinc-500
-              "
-            >
-              {{ auth.user()?.email }}
-            </p>
-          </div>
-        </div>
-
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="userOrigin"
+        [cdkConnectedOverlayOpen]="userTooltipOpen()"
+        [cdkConnectedOverlayPositions]="[
+          {
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'end',
+            overlayY: 'top',
+            offsetY: 8
+          }
+        ]"
+      >
         <div
+          (mouseenter)="userTooltipOpen.set(true)"
+          (mouseleave)="userTooltipOpen.set(false)"
           class="
-            space-y-2
-            border-t border-zinc-800
-            pt-3
-            text-xs
+            w-72
+            rounded
+            border border-zinc-800
+            bg-zinc-950
+            p-4
+            shadow-2xl shadow-black/20
           "
         >
-          <div class="flex justify-between">
-            <span class="text-zinc-500">
-              Usuario
-            </span>
+          @if (auth.loading()) {
+            <div class="text-sm text-zinc-500">
+              Cargando usuario...
+            </div>
+          } @else {
+            <div class="mb-3 flex items-center gap-3">
+              <div
+                class="
+                  flex size-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  border border-blue-500/30
+                  bg-blue-500/10
+                  text-blue-400
+                "
+              >
+                <lucide-icon
+                  [img]="userIcon"
+                  class="h-5 w-5"
+                />
+              </div>
 
-            <span class="text-zinc-200">
-              {{ auth.user()?.username }}
-            </span>
-          </div>
+              <div class="min-w-0">
+                <p
+                  class="
+                    truncate
+                    text-sm
+                    font-semibold
+                    text-zinc-100
+                  "
+                >
+                  {{ auth.user()?.name }}
+                </p>
 
-          <div class="flex justify-between">
-            <span class="text-zinc-500">
-              Equipo
-            </span>
+                <p
+                  class="
+                    truncate
+                    text-xs
+                    text-zinc-500
+                  "
+                >
+                  {{ auth.user()?.email }}
+                </p>
+              </div>
+            </div>
 
-            <span class="text-zinc-200">
-              {{ auth.user()?.computer }}
-            </span>
-          </div>
-            <div class="flex justify-between">
-            <span class="text-zinc-500">
-              Rol
-            </span>
+            <div
+              class="
+                space-y-2
+                border-t border-zinc-800
+                pt-3
+                text-xs
+              "
+            >
+              <div class="flex justify-between">
+                <span class="text-zinc-500">
+                  Usuario
+                </span>
 
-            <span class="text-zinc-200">
-              {{ auth.user()?.role }}
-            </span>
-          </div>
+                <span class="text-zinc-200">
+                  {{ auth.user()?.username }}
+                </span>
+              </div>
+
+              <div class="flex justify-between">
+                <span class="text-zinc-500">
+                  Equipo
+                </span>
+
+                <span class="text-zinc-200">
+                  {{ auth.user()?.computer }}
+                </span>
+              </div>
+
+              <div class="flex justify-between">
+                <span class="text-zinc-500">
+                  Rol
+                </span>
+
+                <span class="text-zinc-200">
+                  {{ auth.user()?.role }}
+                </span>
+              </div>
+            </div>
+          }
         </div>
-      }
+      </ng-template>
     </div>
-  </ng-template>
-</div>
+
     <!-- THEME TOGGLE -->
 
     <button
       type="button"
       class="
         app-no-drag
-
-        flex
-        w-12
-        items-center
-        justify-center
-
-        text-zinc-400
-
+        tb-btn
+        grid
+        w-11
+        place-items-center
         transition
-
-        hover:bg-zinc-800
-        hover:text-white
       "
       (click)="toggleTheme()"
-      [title]="theme() === 'zinc'
-        ? 'Cambiar a Slate'
-        : 'Cambiar a Zinc'"
+      [title]="themeService.theme() === 'zinc'
+        ? 'Cambiar a tema claro'
+        : 'Cambiar a tema oscuro'"
     >
-
       <lucide-icon
-        [img]="theme() === 'zinc'
+        [img]="themeService.theme() === 'zinc'
           ? moonIcon
           : sunIcon"
-        [size]="17"
+        [size]="16"
       />
-
     </button>
 
     <!-- MINIMIZE -->
@@ -267,19 +230,17 @@ border border-emerald-900/70
       type="button"
       class="
         app-no-drag
+        tb-btn
         grid
-        w-12
+        w-11
         place-items-center
-        text-zinc-400
         transition
-        hover:bg-zinc-800
-        hover:text-white
       "
       (click)="minimize()"
     >
       <lucide-icon
         [img]="minimizeIcon"
-        [size]="17"
+        [size]="16"
       />
     </button>
 
@@ -289,13 +250,11 @@ border border-emerald-900/70
       type="button"
       class="
         app-no-drag
+        tb-btn
         grid
-        w-12
+        w-11
         place-items-center
-        text-zinc-400
         transition
-        hover:bg-zinc-800
-        hover:text-white
       "
       (click)="toggleMaximize()"
     >
@@ -305,7 +264,7 @@ border border-emerald-900/70
             ? restoreIcon
             : maximizeIcon
         "
-        [size]="15"
+        [size]="14"
       />
     </button>
 
@@ -315,19 +274,18 @@ border border-emerald-900/70
       type="button"
       class="
         app-no-drag
+        tb-btn
+        tb-close
         grid
-        w-12
+        w-11
         place-items-center
-        text-zinc-400
         transition
-        hover:bg-red-600
-        hover:text-white
       "
       (click)="close()"
     >
       <lucide-icon
         [img]="closeIcon"
-        [size]="18"
+        [size]="17"
       />
     </button>
 

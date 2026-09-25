@@ -13,6 +13,7 @@ import { CheckCircle2, Clipboard, FilePenLine, LucideAngularModule } from 'lucid
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   auditTime,
+  debounceTime,
   distinctUntilChanged,
   fromEvent,
   map,
@@ -261,6 +262,13 @@ goToEditTemplate(): void {
 
         distinctUntilChanged(),
 
+        /*
+         * Espera a que el estado se asiente antes de
+         * colapsar/expandir: evita el parpadeo cuando
+         * el scroll oscila cerca del umbral.
+         */
+        debounceTime(120),
+
         takeUntilDestroyed(
           this.destroyRef
         )
@@ -500,8 +508,8 @@ goToEditTemplate(): void {
     scrollTop: number
   ): boolean {
     return this.compactHeader()
-      ? scrollTop >= 48
-      : scrollTop > 180;
+      ? scrollTop >= 120
+      : scrollTop > 200;
   }
   actionPlanValue(
   sectionId: string

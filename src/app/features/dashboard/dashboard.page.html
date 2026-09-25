@@ -1,45 +1,33 @@
-<div class="h-full bg-transparent text-zinc-100 -mx-8" >
-  <header class="border-b border-zinc-800 bg-zinc-950/95 px-5 pb-4 backdrop-blur-xl">
-    <div class="mx-auto flex max-w-[1900px] flex-wrap items-center justify-between gap-4">
-      <div>
-        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
-          Analytics workspace
-        </p>
-        <h1 class="mt-1 text-2xl font-semibold tracking-tight text-white">
-          Dashboard de checklists
-        </h1>
-        <p class="mt-1 text-sm text-zinc-500">
-          Explora respuestas, resultados y métricas calculadas.
-        </p>
-      </div>
+﻿<div class="h-full">
+  <app-page-header
+    eyebrow="Analytics workspace"
+    title="Dashboard de checklists"
+    description="Explora respuestas, resultados y métricas calculadas."
+  >
+    <app-button
+      variant="secondary"
+      [icon]="Filter"
+      ariaLabel="Mostrar u ocultar panel de filtros"
+      (pressed)="filterPanelOpen.update(value => !value)"
+    >
+      Filtros
+    </app-button>
 
-      <div class="flex items-center gap-2">
-        <app-button
-          variant="secondary"
-          [icon]="Filter"
-          ariaLabel="Mostrar u ocultar panel de filtros"
-          (pressed)="filterPanelOpen.update(value => !value)"
-        >
-          Filtros
-        </app-button>
-
-        <app-button
-          variant="secondary"
-          [icon]="RefreshCw"
-          [loading]="loading()"
-          loadingText="Actualizando..."
-          ariaLabel="Actualizar dashboard"
-          (pressed)="load()"
-        >
-          Actualizar
-        </app-button>
-      </div>
-    </div>
-  </header>
+    <app-button
+      variant="secondary"
+      [icon]="RefreshCw"
+      [loading]="loading()"
+      loadingText="Actualizando..."
+      ariaLabel="Actualizar dashboard"
+      (pressed)="load()"
+    >
+      Actualizar
+    </app-button>
+  </app-page-header>
 
   @if (errorMessage()) {
-    <div class="mx-auto max-w-[1900px] px-5 pt-5">
-      <div role="alert" class="rounded-xl border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-300">
+    <div class="mb-6">
+      <div role="alert" class="rounded border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-300">
         {{ errorMessage() }}
       </div>
     </div>
@@ -54,7 +42,7 @@
     </div>
   } @else {
     <div
-      class="mx-auto grid max-w-[1900px] gap-0"
+      class="grid gap-0"
       [class.xl:grid-cols-[300px_minmax(0,1fr)]]="filterPanelOpen()"
     >
       @if (filterPanelOpen()) {
@@ -80,7 +68,7 @@
               <select
                 [ngModel]="selectedTemplateId() ?? ''"
                 (ngModelChange)="selectTemplate($event)"
-                class="mt-1.5 h-11 w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 text-sm text-zinc-200 outline-none focus:border-blue-500"
+                class="mt-1.5 h-11 w-full rounded border border-zinc-700 bg-zinc-950 px-3 text-sm text-zinc-200 outline-none focus:border-blue-500"
               >
                 <option value="">Todas las plantillas</option>
                 @for (template of templates(); track template.id) {
@@ -89,7 +77,7 @@
               </select>
             </label>
 
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-3">
+            <div class="rounded border border-zinc-800 bg-zinc-950/60 p-3">
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-400">
@@ -112,7 +100,7 @@
 
               <div class="mt-3 space-y-2">
                 @for (filter of activeFilters(); track filter.id) {
-                  <article class="rounded-xl border border-blue-900/50 bg-blue-950/20 p-3">
+                  <article class="rounded border border-blue-900/50 bg-blue-950/20 p-3">
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0">
                         <p class="truncate text-[10px] font-bold uppercase tracking-wider text-blue-400">
@@ -133,7 +121,7 @@
                     </div>
                   </article>
                 } @empty {
-                  <div class="rounded-xl border border-dashed border-zinc-800 px-3 py-6 text-center">
+                  <div class="rounded border border-dashed border-zinc-800 px-3 py-6 text-center">
                     <p class="text-xs text-zinc-500">Sin filtros adicionales</p>
                     <button
                       type="button"
@@ -181,55 +169,55 @@
         </div>
 
         <section class="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4" aria-label="Indicadores principales">
-          <article class=" border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+          <article class="rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
             <div class="flex items-center justify-between">
-              <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Registros</p>
-              <span class="grid size-9 place-items-center rounded-xl bg-blue-500/10 text-blue-300">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Registros</p>
+              <span class="grid size-9 place-items-center rounded bg-blue-500/10 text-blue-300">
                 <app-button variant="ghost" size="icon" [icon]="Layers3" [disabled]="true" ariaLabel="Registros" />
               </span>
             </div>
-            <p class="mt-5 text-3xl font-semibold text-white">{{ filteredRows().length }}</p>
+            <p class="mt-4 text-3xl font-semibold tabular-nums tracking-tight text-zinc-100">{{ filteredRows().length }}</p>
             <p class="mt-1 text-xs text-zinc-600">Submissions visibles</p>
           </article>
 
-          <article class=" border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+          <article class="rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
             <div class="flex items-center justify-between">
-              <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Completados</p>
-              <span class="grid size-9 place-items-center rounded-xl bg-emerald-500/10 text-emerald-300">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Completados</p>
+              <span class="grid size-9 place-items-center rounded bg-emerald-500/10 text-emerald-300">
                 <app-button variant="ghost" size="icon" [icon]="CheckCircle2" [disabled]="true" ariaLabel="Completados" />
               </span>
             </div>
-            <p class="mt-5 text-3xl font-semibold text-white">{{ completeCount() }}</p>
+            <p class="mt-4 text-3xl font-semibold tabular-nums tracking-tight text-zinc-100">{{ completeCount() }}</p>
             <p class="mt-1 text-xs text-zinc-600">{{ completionRate() }}% del total</p>
           </article>
 
-          <article class=" border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+          <article class="rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
             <div class="flex items-center justify-between">
-              <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Borradores</p>
-              <span class="grid size-9 place-items-center rounded-xl bg-amber-500/10 text-amber-300">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Borradores</p>
+              <span class="grid size-9 place-items-center rounded bg-amber-500/10 text-amber-300">
                 <app-button variant="ghost" size="icon" [icon]="Activity" [disabled]="true" ariaLabel="Borradores" />
               </span>
             </div>
-            <p class="mt-5 text-3xl font-semibold text-white">{{ draftCount() }}</p>
+            <p class="mt-4 text-3xl font-semibold tabular-nums tracking-tight text-zinc-100">{{ draftCount() }}</p>
             <p class="mt-1 text-xs text-zinc-600">Pendientes</p>
           </article>
 
-          <article class=" border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+          <article class="rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
             <div class="flex items-center justify-between">
-              <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Métricas</p>
-              <span class="grid size-9 place-items-center rounded-xl bg-violet-500/10 text-violet-300">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Métricas</p>
+              <span class="grid size-9 place-items-center rounded bg-violet-500/10 text-violet-300">
                 <app-button variant="ghost" size="icon" [icon]="Gauge" [disabled]="true" ariaLabel="Métricas" />
               </span>
             </div>
-            <p class="mt-5 text-3xl font-semibold text-white">{{ calculatedMetrics().length }}</p>
+            <p class="mt-4 text-3xl font-semibold tabular-nums tracking-tight text-zinc-100">{{ calculatedMetrics().length }}</p>
             <p class="mt-1 text-xs text-zinc-600">Resultados calculados</p>
           </article>
         </section>
 
         <section class="mt-5 grid gap-5 2xl:grid-cols-[minmax(0,1.2fr)_minmax(380px,.8fr)]">
-          <article class=" border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+          <article class="rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
             <div class="flex items-center gap-3">
-              <span class="grid size-10 place-items-center rounded-xl bg-blue-500/10 text-blue-300">
+              <span class="grid size-10 place-items-center rounded bg-blue-500/10 text-blue-300">
                 <app-button variant="ghost" size="icon" [icon]="BarChart3" [disabled]="true" ariaLabel="Valores calculados" />
               </span>
               <div>
@@ -243,26 +231,26 @@
                 [series]="calculatedSeries()"
                 [chart]="calculatedChart"
                 [plotOptions]="calculatedPlotOptions"
-                [dataLabels]="calculatedDataLabels"
+                [dataLabels]="calculatedDataLabels()"
                 [fill]="calculatedFill"
-                [grid]="calculatedGrid"
+                [grid]="calculatedGrid()"
                 [xaxis]="calculatedXAxis()"
-                [yaxis]="calculatedYAxis"
+                [yaxis]="calculatedYAxis()"
                 [colors]="['#3b82f6']"
-                [theme]="chartTheme"
-                [tooltip]="tooltip"
+                [theme]="chartTheme()"
+                [tooltip]="tooltip()"
               />
             } @else {
               <div class="grid h-[330px] place-items-center">
                 <div class="text-center">
                   <p class="text-sm text-zinc-500">No hay valores calculados</p>
-                  <p class="mt-1 text-xs text-zinc-700">Se esperan propiedades calculated_*</p>
+                  <p class="mt-1 text-xs text-zinc-600">Se esperan propiedades calculated_*</p>
                 </div>
               </div>
             }
           </article>
 
-          <article class=" border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+          <article class="rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
             <div>
               <h2 class="text-sm font-semibold text-zinc-100">Estado de submissions</h2>
               <p class="mt-0.5 text-xs text-zinc-600">Distribución por estado</p>
@@ -273,16 +261,16 @@
               [chart]="statusChart"
               [labels]="statusLabels"
               [colors]="statusColors"
-              [legend]="statusLegend"
+              [legend]="statusLegend()"
               [dataLabels]="statusDataLabels"
               [stroke]="statusStroke"
-              [theme]="chartTheme"
-              [tooltip]="tooltip"
+              [theme]="chartTheme()"
+              [tooltip]="tooltip()"
             />
           </article>
         </section>
 
-        <section class="mt-5  border border-zinc-800 bg-zinc-900 p-5 shadow-lg shadow-black/10">
+        <section class="mt-5 rounded border border-zinc-800 bg-zinc-900/70 p-6 shadow-lg shadow-black/10">
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div>
               <h2 class="text-sm font-semibold text-zinc-100">Distribución de respuestas</h2>
@@ -292,7 +280,7 @@
             <select
               [ngModel]="selectedDistributionKey()"
               (ngModelChange)="selectedDistributionKey.set($event)"
-              class="h-10 max-w-sm rounded-xl border border-zinc-700 bg-zinc-950 px-3 text-xs text-zinc-300 outline-none focus:border-blue-500"
+              class="h-10 max-w-sm rounded border border-zinc-700 bg-zinc-950 px-3 text-xs text-zinc-300 outline-none focus:border-blue-500"
               aria-label="Variable para gráfica de distribución"
             >
               @for (item of distributionKeys(); track item.key) {
@@ -310,9 +298,9 @@
               [xaxis]="distributionXAxis()"
               [legend]="distributionLegend"
               [colors]="chartColors"
-              [grid]="grid"
-              [theme]="chartTheme"
-              [tooltip]="tooltip"
+              [grid]="grid()"
+              [theme]="chartTheme()"
+              [tooltip]="tooltip()"
             />
           } @else {
             <div class="grid h-[330px] place-items-center">
@@ -338,12 +326,12 @@
       role="dialog"
       aria-modal="true"
       aria-labelledby="add-filter-title"
-      class="relative w-full max-w-xl rounded-3xl border border-zinc-700 bg-zinc-950 p-6 text-zinc-100 shadow-2xl shadow-black/60"
+      class="relative w-full max-w-xl rounded-sm border border-zinc-700 bg-zinc-950 p-6 text-zinc-100 shadow-2xl shadow-black/60"
     >
       <div class="flex items-start justify-between gap-4">
         <div>
           <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-400">Filtros</p>
-          <h2 id="add-filter-title" class="mt-1 text-lg font-semibold text-white">Agregar filtro</h2>
+          <h2 id="add-filter-title" class="mt-1 text-lg font-semibold text-zinc-100">Agregar filtro</h2>
           <p class="mt-1 text-xs text-zinc-500">Selecciona una columna y uno de sus valores disponibles.</p>
         </div>
 
@@ -356,7 +344,7 @@
           <select
             [ngModel]="pendingFilterKey()"
             (ngModelChange)="selectPendingFilterKey($event)"
-            class="mt-1.5 h-11 w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-200 outline-none focus:border-blue-500"
+            class="mt-1.5 h-11 w-full rounded border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-200 outline-none focus:border-blue-500"
           >
             @for (option of availableFilterOptions(); track option.key) {
               <option [value]="option.key">{{ option.label }}</option>
@@ -369,7 +357,7 @@
           <select
             [ngModel]="pendingFilterValue()"
             (ngModelChange)="pendingFilterValue.set($event)"
-            class="mt-1.5 h-11 w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-200 outline-none focus:border-blue-500"
+            class="mt-1.5 h-11 w-full rounded border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-200 outline-none focus:border-blue-500"
           >
             @for (value of pendingValues(); track value) {
               <option [value]="value">{{ value }}</option>
