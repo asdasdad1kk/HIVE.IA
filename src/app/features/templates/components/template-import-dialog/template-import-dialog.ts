@@ -2,6 +2,8 @@ import {
   Component,
   computed,
   inject,
+  OnDestroy,
+  OnInit,
   signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +14,8 @@ import {
   Clipboard,
   FileJson2,
   Lightbulb,
+  PanelRightClose,
+  PanelRightOpen,
   Sparkles,
   Upload,
   WandSparkles,
@@ -63,7 +67,8 @@ type TemplateMode = 'form' | 'matrix' | 'mixed' | 'action-plan';
   imports: [FormsModule, LucideAngularModule],
   templateUrl: './template-import-dialog.html'
 })
-export class TemplateImportDialogComponent {
+export class TemplateImportDialogComponent
+  implements OnInit, OnDestroy {
   private readonly dialogRef = inject(
     DialogRef<ChecklistTemplateInput | undefined>
   );
@@ -71,6 +76,8 @@ export class TemplateImportDialogComponent {
   readonly Bot = Bot;
   readonly Check = Check;
   readonly Clipboard = Clipboard;
+  readonly PanelRightClose = PanelRightClose;
+  readonly PanelRightOpen = PanelRightOpen;
   readonly FileJson2 = FileJson2;
   readonly Lightbulb = Lightbulb;
   readonly Sparkles = Sparkles;
@@ -89,6 +96,28 @@ export class TemplateImportDialogComponent {
   readonly aiMode = signal<TemplateMode>('mixed');
   readonly includeRules = signal(true);
   readonly includeObservations = signal(true);
+
+  readonly copilotOpen = signal(false);
+
+  private removeCopilotListener: (() => void) | null = null;
+
+  ngOnInit(): void {
+    const copilot = window.checklistApi?.copilot;
+
+    if (!copilot) {
+      return;
+    }
+
+    void copilot.isOpen().then(open => this.copilotOpen.set(open));
+
+    this.removeCopilotListener = copilot.onStateChange(open =>
+      this.copilotOpen.set(open)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.removeCopilotListener?.();
+  }
 
   readonly validation = computed<ValidationResult>(() =>
     this.validateJson(this.jsonText())
@@ -223,6 +252,17 @@ export class TemplateImportDialogComponent {
       this.buildAiPrompt(request),
       this.copiedPrompt
     );
+  }
+
+  openCopilot(): void {
+    const copilot = window.checklistApi?.copilot;
+
+    if (!copilot) {
+      this.copilotOpen.update(value => !value);
+      return;
+    }
+
+    void copilot.toggle();
   }
 
   async copyDebugPrompt(): Promise<void> {

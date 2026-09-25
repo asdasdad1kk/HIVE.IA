@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 const ADMIN_FILE =
-  'D:\HIVE\electron\admins.txt';
+  'D:\\HIVE\\electron\\admins.txt';
 
 function isAdmin(employeeNumber) {
   try {
@@ -15,7 +15,7 @@ function isAdmin(employeeNumber) {
       .split(/\r?\n/)
       .map(x => x.trim())
       .filter(Boolean);
-
+    console.log('Admins:', admins);
     return admins.includes(employeeNumber);
   } catch {
     return false;
@@ -52,7 +52,7 @@ function getCredentials() {
       : 'user';
 
     return {
-      email,
+      email:'danielpaniaguasanchez@gmail.com',
       name: displayName,
       username,
       computer: process.env.COMPUTERNAME,

@@ -45,6 +45,7 @@ import { DraftsStateService } from '../../core/services/drafts';
 import { Dialog } from '@angular/cdk/dialog';
 import { ChecklistTemplateInput } from '../../core/models';
 import { TemplateImportDialogComponent } from '../../features/templates/components/template-import-dialog/template-import-dialog';
+import { UiDialogService } from '../../shared/dialog/ui-dialog.service';
 @Component({
   selector: 'app-sidebar',
 
@@ -133,9 +134,15 @@ async deleteDraft(
   event.preventDefault();
   event.stopPropagation();
 
-  const confirmed = window.confirm(
-    '¿Eliminar borrador?'
-  );
+  const confirmed = await this.uiDialog.confirm({
+    tone: 'danger',
+    title: 'Eliminar borrador',
+    message: '¿Eliminar este borrador?',
+    detail:
+      'Se descartará el avance guardado de este checklist. Esta acción no se puede deshacer.',
+    confirmText: 'Eliminar borrador',
+    cancelText: 'Cancelar'
+  });
 
   if (!confirmed) {
     return;
@@ -198,6 +205,7 @@ readonly draftCount =
   }
 
 private readonly dialog = inject(Dialog);
+private readonly uiDialog = inject(UiDialogService);
 private readonly router = inject(Router);
 openQuickCreate(): void {
   const dialogRef = this.dialog.open(

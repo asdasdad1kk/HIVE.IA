@@ -419,6 +419,47 @@ app-root {
   padding: 0 !important;
 }
 
+body.copilot-panel-open .checklist-import-dialog {
+  margin-right: 440px;
+}
+
+/* Diálogos reutilizables (alert / confirm / prompt) */
+.ui-dialog-panel {
+  max-width: none !important;
+  padding: 0 !important;
+  animation: ui-dialog-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.copilot-panel-open .ui-dialog-panel {
+  margin-right: 440px;
+}
+
+.checklist-dialog-backdrop {
+  animation: ui-backdrop-in 0.2s ease;
+}
+
+@keyframes ui-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ui-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .cdk-global-overlay-wrapper {
   padding: 20px;
 }
@@ -712,4 +753,8 @@ app-root {
 
 *::-webkit-scrollbar-thumb:hover {
   background: var(--z600);
+}
+
+[data-app-scroll-container] {
+  scroll-behavior: smooth;
 }

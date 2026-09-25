@@ -212,6 +212,31 @@
       </ng-template>
     </div>
 
+    <!-- COPILOT PANEL -->
+
+    <button
+      type="button"
+      class="
+        app-no-drag
+        tb-btn
+        grid
+        w-11
+        place-items-center
+        transition
+      "
+      (click)="toggleCopilot()"
+      [title]="copilotOpen()
+        ? 'Cerrar panel de Copilot'
+        : 'Abrir panel de Copilot'"
+    >
+      <lucide-icon
+        [img]="copilotOpen()
+          ? copilotCloseIcon
+          : copilotOpenIcon"
+        [size]="16"
+      />
+    </button>
+
     <!-- THEME TOGGLE -->
 
     <button

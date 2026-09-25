@@ -17,6 +17,7 @@ import {
 import { ChecklistRepository } from '../../../../core/checklist.repository';
 import { PageHeaderComponent } from '../../../../shared/page-header.component';
 import { TemplateImportDialogComponent } from '../../components/template-import-dialog/template-import-dialog';
+import { UiDialogService } from '../../../../shared/dialog/ui-dialog.service';
 import { Auth } from '../../../../core/services/auth';
 import {
   Copy,
@@ -59,6 +60,7 @@ export class TemplateListPage {
   readonly auth = inject(Auth);
   private readonly repository = inject(ChecklistRepository);
   private readonly dialog = inject(Dialog);
+  private readonly uiDialog = inject(UiDialogService);
 
   readonly templates = signal<ChecklistTemplate[]>([]);
   readonly loading = signal(true);
@@ -143,7 +145,16 @@ export class TemplateListPage {
       return;
     }
 
-    if (!window.confirm(`¿Eliminar la plantilla "${template.name}"?`)) {
+    const confirmed = await this.uiDialog.confirm({
+      tone: 'danger',
+      title: 'Eliminar plantilla',
+      message: `¿Eliminar la plantilla "${template.name}"?`,
+      detail: 'Esta acción no se puede deshacer.',
+      confirmText: 'Eliminar plantilla',
+      cancelText: 'Cancelar'
+    });
+
+    if (!confirmed) {
       return;
     }
 

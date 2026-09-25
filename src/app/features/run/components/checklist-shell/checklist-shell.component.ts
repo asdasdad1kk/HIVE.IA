@@ -9,7 +9,17 @@ import {
   signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CheckCircle2, Clipboard, FilePenLine, LucideAngularModule } from 'lucide-angular';
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  CheckCircle2,
+  Clipboard,
+  FilePenLine,
+  LucideAngularModule,
+  PanelLeftClose,
+  PanelLeftOpen
+} from 'lucide-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   auditTime,
@@ -21,6 +31,7 @@ import {
 } from 'rxjs';
 
 import {
+  ActionPlanRow,
   ActionPlanSectionValue,
   ChecklistActionPlanSection,
   ChecklistDefinition,
@@ -31,6 +42,9 @@ import {
 } from '../../../../core/models';
 
 import {
+  isActionPlanSection,
+  isFormSection,
+  isMatrixSection,
   sectionFields,
   sectionItemCount,
   sectionRows
@@ -64,6 +78,40 @@ export interface ChecklistObservationChange {
 export interface ChecklistActionPlanValueChange {
   sectionId: string;
   value: ActionPlanSectionValue;
+}
+
+export type SectionFillState =
+  | 'empty'
+  | 'partial'
+  | 'complete';
+
+export interface SectionStat {
+  answered: number;
+  total: number;
+  percent: number;
+  state: SectionFillState;
+}
+
+const EMPTY_SECTION_STAT: SectionStat = {
+  answered: 0,
+  total: 0,
+  percent: 0,
+  state: 'empty'
+};
+
+const NAV_COLLAPSED_STORAGE_KEY =
+  'run-nav-collapsed';
+
+function readNavCollapsed(): boolean {
+  try {
+    return (
+      localStorage.getItem(
+        NAV_COLLAPSED_STORAGE_KEY
+      ) === '1'
+    );
+  } catch {
+    return false;
+  }
 }
 
 @Component({
@@ -138,6 +186,21 @@ goToEditTemplate(): void {
 
   readonly compactHeader =
     signal(false);
+
+  readonly Check = Check;
+  readonly chevronDownIcon = ChevronDown;
+  readonly chevronRightIcon = ChevronRight;
+  readonly panelLeftCloseIcon = PanelLeftClose;
+  readonly panelLeftOpenIcon = PanelLeftOpen;
+
+  readonly navCollapsed =
+    signal(readNavCollapsed());
+
+  readonly collapsedSections =
+    signal<ReadonlySet<string>>(new Set());
+
+  readonly activeSectionId =
+    signal<string | null>(null);
 
   readonly navigationSections = computed(() =>
     this.definition().sections.filter(section => section.view !== 'action-plan')
@@ -222,6 +285,168 @@ goToEditTemplate(): void {
           );
     });
 
+  /**
+   * Avance de captura por sección: alimenta el
+   * panel lateral (verde/amarillo) y los badges
+   * de cada sección.
+   */
+  readonly sectionStats =
+    computed<Map<string, SectionStat>>(() => {
+
+      const values =
+        this.effectiveValues();
+
+      const stats =
+        new Map<string, SectionStat>();
+
+      for (const section of this.definition().sections) {
+
+        let answered = 0;
+        let total = 0;
+
+        if (isFormSection(section)) {
+
+          total = section.fields.length;
+
+          answered = section.fields.filter(field =>
+            this.hasFieldValue(
+              field,
+              values[field.key]
+            )
+          ).length;
+
+        } else if (isMatrixSection(section)) {
+
+          total = section.rows.length;
+
+          answered = section.rows.filter(row =>
+            this.hasMatrixValue(
+              values[row.key]
+            )
+          ).length;
+
+        } else {
+
+          const rows =
+            this.actionPlanValue(section.id)?.rows ?? [];
+
+          total = Math.max(
+            section.initialRows ?? 1,
+            rows.length
+          );
+
+          answered = Math.min(
+            total,
+            rows.filter(row =>
+              this.hasActionPlanRow(row)
+            ).length
+          );
+        }
+
+        const percent =
+          total === 0
+            ? 0
+            : Math.round(
+                (answered / total) * 100
+              );
+
+        const state: SectionFillState =
+          total === 0 || answered === 0
+            ? 'empty'
+            : answered >= total
+              ? 'complete'
+              : 'partial';
+
+        stats.set(section.id, {
+          answered,
+          total,
+          percent,
+          state
+        });
+      }
+
+      return stats;
+    });
+
+  sectionStat(
+    section: ChecklistSection
+  ): SectionStat {
+    return (
+      this.sectionStats().get(section.id) ??
+      EMPTY_SECTION_STAT
+    );
+  }
+
+  viewLabel(
+    section: ChecklistSection
+  ): string {
+    if (section.view === 'matrix') {
+      return 'Matriz';
+    }
+
+    if (section.view === 'action-plan') {
+      return 'Plan de acción';
+    }
+
+    return 'Formulario';
+  }
+
+  isSectionCollapsed(
+    sectionId: string
+  ): boolean {
+    return this.collapsedSections().has(
+      sectionId
+    );
+  }
+
+  toggleSection(sectionId: string): void {
+    this.collapsedSections.update(current => {
+      const next = new Set(current);
+
+      if (next.has(sectionId)) {
+        next.delete(sectionId);
+      } else {
+        next.add(sectionId);
+      }
+
+      return next;
+    });
+  }
+
+  expandSection(sectionId: string): void {
+    if (!this.isSectionCollapsed(sectionId)) {
+      return;
+    }
+
+    this.collapsedSections.update(current => {
+      const next = new Set(current);
+
+      next.delete(sectionId);
+
+      return next;
+    });
+  }
+
+  onNavClick(sectionId: string): void {
+    this.expandSection(sectionId);
+    this.activeSectionId.set(sectionId);
+  }
+
+  toggleNavCollapsed(): void {
+    this.navCollapsed.update(
+      value => !value
+    );
+
+    try {
+      localStorage.setItem(
+        NAV_COLLAPSED_STORAGE_KEY,
+        this.navCollapsed() ? '1' : '0'
+      );
+    } catch {
+      /* almacenamiento no disponible */
+    }
+  }
+
   ngAfterViewInit(): void {
     if (this.previewMode()) {
       return;
@@ -278,6 +503,25 @@ goToEditTemplate(): void {
           compact
         )
       );
+
+    fromEvent(
+      scrollContainer,
+      'scroll',
+      {
+        passive: true
+      }
+    )
+      .pipe(
+        auditTime(80),
+        takeUntilDestroyed(
+          this.destroyRef
+        )
+      )
+      .subscribe(() =>
+        this.updateActiveSection()
+      );
+
+    this.updateActiveSection();
   }
 
   sectionCount(
@@ -478,6 +722,47 @@ goToEditTemplate(): void {
     return (
       typeof value === 'string' &&
       value.trim().length > 0
+    );
+  }
+
+  private hasActionPlanRow(
+    row: ActionPlanRow
+  ): boolean {
+    return (
+      row.action.trim().length > 0 ||
+      row.responsibleEmail.trim().length > 0
+    );
+  }
+
+  private updateActiveSection(): void {
+    const sections =
+      this.navigationSections();
+
+    if (sections.length === 0) {
+      return;
+    }
+
+    let activeId: string | null = null;
+
+    for (const section of sections) {
+      const element =
+        document.getElementById(
+          `shell-section-${section.id}`
+        );
+
+      if (!element) {
+        continue;
+      }
+
+      if (
+        element.getBoundingClientRect().top <= 180
+      ) {
+        activeId = section.id;
+      }
+    }
+
+    this.activeSectionId.set(
+      activeId ?? sections[0].id
     );
   }
 

@@ -108,101 +108,192 @@
   </header>
 }
   <div
-    class="grid flex-1 grid-cols-1 gap-8 px-4 py-8 sm:px-6 lg:px-8"
-    [class.lg:grid-cols-[244px_minmax(0,1fr)]]="hasNavigation()"
+    class="grid flex-1 grid-cols-1 gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+    [class.lg:grid-cols-[268px_minmax(0,1fr)]]="hasNavigation() && !navCollapsed()"
+    [class.lg:grid-cols-[52px_minmax(0,1fr)]]="hasNavigation() && navCollapsed()"
   >
-    @if (hasNavigation()) {
-      <aside class="hidden lg:block">
-        <nav class="sticky top-24 overflow-hidden rounded border border-zinc-800 bg-zinc-900/60 p-2" aria-label="Secciones del checklist">
-          <p class="px-3 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-600">Secciones</p>
-          @for (navSection of navigationSections(); track navSection.id; let navIndex = $index) {
-            <a [href]="'#shell-section-' + navSection.id" class="flex items-center gap-3 rounded-sm px-3 py-2.5 text-sm text-zinc-400 transition hover:bg-zinc-800 hover:text-zinc-100">
-              <span class="grid size-6 shrink-0 place-items-center rounded-sm border border-zinc-700 bg-zinc-950 text-[10px] font-semibold text-blue-300">{{ navIndex + 1 }}</span>
-              <span class="truncate">{{ navSection.title }}</span>
-            </a>
-          }
+    @if (hasNavigation() && !navCollapsed()) {
+      <aside class="hidden min-w-0 lg:block">
+        <nav
+          class="sticky top-24 flex max-h-[calc(100vh-7rem)] flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900/70 shadow-lg shadow-black/10"
+          aria-label="Secciones del checklist"
+        >
+          <div class="flex items-center gap-2 border-b border-zinc-800/80 px-3 py-2.5">
+            <span class="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-500">Secciones</span>
+
+            <span class="ml-auto rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-bold text-zinc-400">
+              {{ navigationSections().length }}
+            </span>
+
+            <button
+              type="button"
+              class="grid size-6 place-items-center rounded text-zinc-500 transition hover:bg-zinc-800 hover:text-zinc-100"
+              title="Ocultar panel de secciones"
+              (click)="toggleNavCollapsed()"
+            >
+              <lucide-icon [img]="panelLeftCloseIcon" [size]="14" />
+            </button>
+          </div>
+
+          <div class="min-h-0 flex-1 space-y-1 overflow-y-auto p-2">
+            @for (navSection of navigationSections(); track navSection.id; let navIndex = $index) {
+              @let stat = sectionStat(navSection);
+
+              <a
+                [href]="'#shell-section-' + navSection.id"
+                (click)="onNavClick(navSection.id)"
+                class="flex items-center gap-3 rounded-md border px-2.5 py-2 text-sm transition"
+                [class.border-transparent]="activeSectionId() !== navSection.id"
+                [class.text-zinc-400]="activeSectionId() !== navSection.id"
+                [class.hover:bg-zinc-800]="activeSectionId() !== navSection.id"
+                [class.hover:text-zinc-100]="activeSectionId() !== navSection.id"
+                [class.border-blue-500/40]="activeSectionId() === navSection.id"
+                [class.bg-blue-500/10]="activeSectionId() === navSection.id"
+                [class.text-zinc-100]="activeSectionId() === navSection.id"
+              >
+                <span
+                  class="grid size-6 shrink-0 place-items-center rounded-md border text-[10px] font-bold transition"
+                  [class.border-emerald-500/40]="stat.state === 'complete'"
+                  [class.bg-emerald-500/15]="stat.state === 'complete'"
+                  [class.text-emerald-300]="stat.state === 'complete'"
+                  [class.border-amber-500/40]="stat.state === 'partial'"
+                  [class.bg-amber-500/15]="stat.state === 'partial'"
+                  [class.text-amber-300]="stat.state === 'partial'"
+                  [class.border-zinc-700]="stat.state === 'empty'"
+                  [class.bg-zinc-950]="stat.state === 'empty'"
+                  [class.text-blue-300]="stat.state === 'empty'"
+                >
+                  {{ navIndex + 1 }}
+                </span>
+
+                <span class="min-w-0 flex-1 truncate">{{ navSection.title }}</span>
+
+                @if (stat.state === 'complete') {
+                  <lucide-icon [img]="Check" [size]="14" class="shrink-0 text-emerald-400" />
+                } @else if (stat.state === 'partial') {
+                  <span class="shrink-0 text-[10px] font-bold text-amber-400">{{ stat.percent }}%</span>
+                }
+              </a>
+            }
+          </div>
         </nav>
       </aside>
+    } @else if (hasNavigation()) {
+      <aside class="hidden min-w-0 lg:block">
+        <div
+          class="sticky top-24 flex w-full flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/70 p-2 shadow-lg shadow-black/10"
+        >
+          <button
+            type="button"
+            class="grid size-8 place-items-center rounded-md border border-zinc-800 bg-zinc-950 text-zinc-400 transition hover:border-blue-500/40 hover:text-blue-300"
+            title="Mostrar panel de secciones"
+            (click)="toggleNavCollapsed()"
+          >
+            <lucide-icon [img]="panelLeftOpenIcon" [size]="16" />
+          </button>
+
+          @for (navSection of navigationSections(); track navSection.id; let navIndex = $index) {
+            @let stat = sectionStat(navSection);
+
+            <a
+              [href]="'#shell-section-' + navSection.id"
+              (click)="onNavClick(navSection.id)"
+              [title]="navSection.title"
+              class="grid size-8 shrink-0 place-items-center rounded-md border text-[10px] font-bold transition hover:bg-zinc-800"
+              [class.border-emerald-500/40]="stat.state === 'complete'"
+              [class.bg-emerald-500/15]="stat.state === 'complete'"
+              [class.text-emerald-300]="stat.state === 'complete'"
+              [class.border-amber-500/40]="stat.state === 'partial'"
+              [class.bg-amber-500/15]="stat.state === 'partial'"
+              [class.text-amber-300]="stat.state === 'partial'"
+              [class.border-zinc-700]="stat.state === 'empty'"
+              [class.bg-zinc-950]="stat.state === 'empty'"
+              [class.text-blue-300]="stat.state === 'empty'"
+              [class.ring-1]="activeSectionId() === navSection.id"
+              [class.ring-blue-500/40]="activeSectionId() === navSection.id"
+            >
+              {{ navIndex + 1 }}
+            </a>
+          }
+        </div>
+      </aside>
     }
-    <main class="min-w-0 space-y-14">
+    <main class="min-w-0 space-y-6">
   @for (
     section of definition().sections;
     track section.id;
     let sectionIndex = $index
   ) {
+    @let stat = sectionStat(section);
+
     <section
       [id]="'shell-section-' + section.id"
-      class="scroll-mt-20"
+      class="scroll-mt-24 overflow-hidden rounded-lg border bg-zinc-900/40 transition-colors"
+      [class.border-zinc-800]="stat.state !== 'complete'"
+      [class.border-emerald-800/60]="stat.state === 'complete'"
+      [class.bg-emerald-950/20]="stat.state === 'complete'"
       [attr.aria-labelledby]="
         'shell-section-title-' +
         section.id
       "
     >
       <header
-        class="mb-5 flex items-start gap-4"
+        class="flex items-start gap-4 border-b border-zinc-800/80 px-4 py-4 sm:px-5"
       >
         <span
-          class="grid size-9 shrink-0 place-items-center rounded-sm border border-blue-500/30 bg-zinc-900 text-xs font-bold text-blue-300"
+          class="grid size-9 shrink-0 place-items-center rounded-md border text-xs font-bold transition"
+          [class.border-emerald-500/40]="stat.state === 'complete'"
+          [class.bg-emerald-500/15]="stat.state === 'complete'"
+          [class.text-emerald-300]="stat.state === 'complete'"
+          [class.border-amber-500/40]="stat.state === 'partial'"
+          [class.bg-amber-500/15]="stat.state === 'partial'"
+          [class.text-amber-300]="stat.state === 'partial'"
+          [class.border-blue-500/30]="stat.state === 'empty'"
+          [class.bg-zinc-950]="stat.state === 'empty'"
+          [class.text-blue-300]="stat.state === 'empty'"
           aria-hidden="true"
         >
-          {{ sectionIndex + 1 }}
+          @if (stat.state === 'complete') {
+            <lucide-icon [img]="Check" [size]="15" />
+          } @else {
+            {{ sectionIndex + 1 }}
+          }
         </span>
 
-        <div
-          class="min-w-0 flex-1 border-b border-zinc-800 pb-4"
-        >
-          <div
-            class="flex flex-wrap items-center gap-2"
-          >
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
             <h2
               [id]="
                 'shell-section-title-' +
                 section.id
               "
-              class="text-lg font-semibold tracking-tight text-zinc-100"
+              class="text-base font-semibold tracking-tight text-zinc-100 sm:text-lg"
             >
               {{ section.title }}
             </h2>
 
-            <!-- <span
-              class="rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
-              [class.border-violet-800]="
-                section.view === 'matrix'
-              "
-              [class.bg-violet-500/10]="
-                section.view === 'matrix'
-              "
-              [class.text-violet-300]="
-                section.view === 'matrix'
-              "
-              [class.border-blue-800]="
-                section.view !== 'matrix'
-              "
-              [class.bg-blue-500/10]="
-                section.view !== 'matrix'
-              "
-              [class.text-blue-300]="
-                section.view !== 'matrix'
-              "
-            >
-              {{
-                section.view === 'matrix'
-                  ? 'Matriz'
-                  : 'Formulario'
-              }}
-            </span> -->
             <span
-  class="rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
->
-  {{
-    section.view === 'matrix'
-      ? 'Matriz'
-      : section.view === 'action-plan'
-        ? 'Plan de acción'
-        : 'Formulario'
-  }}
-</span>
+              class="rounded-full border border-zinc-700 bg-zinc-950 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-zinc-400"
+            >
+              {{ viewLabel(section) }}
+            </span>
 
+            @if (stat.total > 0) {
+              <span
+                class="rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-wider transition"
+                [class.border-emerald-500/40]="stat.state === 'complete'"
+                [class.bg-emerald-500/10]="stat.state === 'complete'"
+                [class.text-emerald-300]="stat.state === 'complete'"
+                [class.border-amber-500/40]="stat.state === 'partial'"
+                [class.bg-amber-500/10]="stat.state === 'partial'"
+                [class.text-amber-300]="stat.state === 'partial'"
+                [class.border-zinc-700]="stat.state === 'empty'"
+                [class.bg-zinc-950]="stat.state === 'empty'"
+                [class.text-zinc-500]="stat.state === 'empty'"
+              >
+                {{ stat.answered }}/{{ stat.total }}
+              </span>
+            }
           </div>
 
           <p
@@ -214,12 +305,36 @@
             de esta sección
           </p>
         </div>
+
+        <button
+          type="button"
+          class="grid size-8 shrink-0 place-items-center rounded-md border border-zinc-800 bg-zinc-950 text-zinc-400 transition hover:border-blue-500/40 hover:text-blue-300"
+          [attr.aria-expanded]="!isSectionCollapsed(section.id)"
+          [title]="
+            isSectionCollapsed(section.id)
+              ? 'Expandir sección'
+              : 'Colapsar sección'
+          "
+          (click)="toggleSection(section.id)"
+        >
+          <lucide-icon
+            [img]="
+              isSectionCollapsed(section.id)
+                ? chevronRightIcon
+                : chevronDownIcon
+            "
+            [size]="16"
+          />
+        </button>
       </header>
 
 
 
+      @if (!isSectionCollapsed(section.id)) {
+        <div class="px-4 py-5 sm:px-5">
+
      @if (section.view === 'matrix') {
-  <div class="sm:ml-[52px]">
+  <div>
     <app-checklist-matrix
       [section]="section"
       [values]="effectiveValues()"
@@ -231,7 +346,7 @@
 } @else if (
   section.view === 'action-plan'
 ) {
-  <div class="sm:ml-[52px]">
+  <div>
     <app-action-plan
       [section]="section"
       [value]="
@@ -247,7 +362,7 @@
     />
   </div>} @else {
         <div
-          class="grid grid-cols-1 gap-5 sm:ml-[52px] lg:grid-cols-2"
+          class="grid grid-cols-1 gap-5 lg:grid-cols-2"
         >
           @for (
             field of section.fields;
@@ -393,6 +508,9 @@
               Esta sección no contiene campos.
             </p>
           }
+        </div>
+      }
+
         </div>
       }
     </section>

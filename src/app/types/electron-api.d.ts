@@ -75,6 +75,30 @@ export interface ChecklistElectronApi {
     ) => void
   ): () => void;
 };
+
+copilot: {
+
+  toggle(): Promise<boolean>;
+
+  isOpen(): Promise<boolean>;
+
+  reload(): Promise<void>;
+
+  openExternal(): Promise<void>;
+
+  clearSession(): Promise<boolean>;
+
+  setTheme(
+    theme: 'dark' | 'light'
+  ): Promise<void>;
+
+  onStateChange(
+    callback: (
+      isOpen: boolean
+    ) => void
+  ): () => void;
+
+};
 mail: {
 
   sendActionPlanMinute(

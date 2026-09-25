@@ -57,6 +57,14 @@ export class ThemeService {
     root.classList.add(
       `theme-${theme}`
     );
+
+    window.checklistApi
+      ?.copilot
+      .setTheme(
+        theme === 'zinc'
+          ? 'dark'
+          : 'light'
+      );
   }
 
   private readStoredTheme(): AppTheme {

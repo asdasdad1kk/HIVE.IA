@@ -55,6 +55,8 @@ export const routes: Routes = [
   {
     path: 'run/:id',
 
+    data: { bleed: true },
+
     loadComponent: () =>
       import(
         './features/run/pages/checklist-runner.page'
@@ -77,6 +79,7 @@ export const routes: Routes = [
   },
 {
   path: 'draft/:id',
+  data: { bleed: true },
   loadComponent: () =>
     import(
       './features/run/pages/checklist-runner.page'

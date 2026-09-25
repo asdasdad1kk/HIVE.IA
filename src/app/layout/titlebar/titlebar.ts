@@ -12,6 +12,8 @@ import {
   Maximize2,
   Minus,
   Moon,
+  PanelRightClose,
+  PanelRightOpen,
   Sun,
   Square,
   UserRound,
@@ -44,6 +46,9 @@ export class Titlebar implements OnInit, OnDestroy {
 
   readonly brandIcon = Hexagon;
 
+  readonly copilotOpenIcon = PanelRightOpen;
+  readonly copilotCloseIcon = PanelRightClose;
+
   readonly applicationLogo = './assets/G.png';
 
   readonly auth = inject(Auth);
@@ -52,11 +57,30 @@ export class Titlebar implements OnInit, OnDestroy {
 
   readonly isMaximized = signal(false);
 
+  readonly copilotOpen = signal(false);
+
   readonly userTooltipOpen = signal(false);
 
   private removeMaximizeListener: (() => void) | null = null;
 
+  private removeCopilotListener: (() => void) | null = null;
+
   async ngOnInit(): Promise<void> {
+
+    const copilot =
+      window.checklistApi?.copilot;
+
+    if (copilot) {
+
+      void copilot.isOpen().then(
+        open => this.copilotOpen.set(open)
+      );
+
+      this.removeCopilotListener =
+        copilot.onStateChange(
+          open => this.copilotOpen.set(open)
+        );
+    }
 
     const controls =
       window.checklistApi?.windowControls;
@@ -78,6 +102,13 @@ export class Titlebar implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removeMaximizeListener?.();
+    this.removeCopilotListener?.();
+  }
+
+  toggleCopilot(): void {
+    void window.checklistApi
+      ?.copilot
+      .toggle();
   }
 
   toggleTheme(): void {

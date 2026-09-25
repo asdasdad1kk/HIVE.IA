@@ -148,6 +148,67 @@ const checklistApi = {
     },
     
   },
+
+  copilot: {
+    toggle() {
+      return ipcRenderer.invoke(
+        'copilot:toggle'
+      );
+    },
+
+    isOpen() {
+      return ipcRenderer.invoke(
+        'copilot:is-open'
+      );
+    },
+
+    reload() {
+      return ipcRenderer.invoke(
+        'copilot:reload'
+      );
+    },
+
+    openExternal() {
+      return ipcRenderer.invoke(
+        'copilot:open-external'
+      );
+    },
+
+    clearSession() {
+      return ipcRenderer.invoke(
+        'copilot:clear-session'
+      );
+    },
+
+    setTheme(theme) {
+      return ipcRenderer.invoke(
+        'copilot:set-theme',
+        theme
+      );
+    },
+
+    onStateChange(callback) {
+      const listener = (
+        _event,
+        isOpen
+      ) => {
+        callback(isOpen);
+      };
+
+      ipcRenderer.on(
+        'copilot:state-change',
+        listener
+      );
+
+      return () => {
+        ipcRenderer.removeListener(
+          'copilot:state-change',
+          listener
+        );
+      };
+    }
+  },
+
   mail: {
   sendActionPlanMinute(
     payload
