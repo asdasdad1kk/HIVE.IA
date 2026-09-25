@@ -31,7 +31,7 @@
               {{ templateName() || 'Plantilla sin nombre' }}
             </h1>
 
-            <p class="mt-1.5 max-w-3xl text-sm leading-6 text-zinc-400">
+            <p class="mt-1.5 text-sm leading-6 text-zinc-400">
               {{
                 templateDescription() ||
                 'Captura y valida la información requerida para completar el checklist.'
@@ -247,7 +247,7 @@
     />
   </div>} @else {
         <div
-          class="grid grid-cols-1 gap-5 sm:ml-[52px] xl:grid-cols-2"
+          class="grid grid-cols-1 gap-5 sm:ml-[52px] lg:grid-cols-2"
         >
           @for (
             field of section.fields;
@@ -255,13 +255,13 @@
           ) {
             <div
               class="min-w-0"
-              [class.xl:col-span-2]="
+              [class.lg:col-span-2]="
                 (
                   field.layout ??
                   'full'
                 ) === 'full'
               "
-              [class.xl:col-span-1]="
+              [class.lg:col-span-1]="
                 field.layout === 'half'
               "
             >
@@ -388,7 +388,7 @@
             </div>
           } @empty {
             <p
-              class="text-sm text-zinc-500 xl:col-span-2"
+              class="text-sm text-zinc-500 lg:col-span-2"
             >
               Esta sección no contiene campos.
             </p>

@@ -91,15 +91,14 @@ import { Titlebar } from './layout/titlebar/titlebar';
   ></div>
 
   <div
-    class="
-      relative
-      min-h-full
-      w-full
-      p-5
-      md:p-7
-      xl:px-10
-    "
-  >
+     class="
+       relative
+       min-h-full
+       w-full
+       p-5
+       md:p-7
+     "
+   >
     <router-outlet />
   </div>
 </main>

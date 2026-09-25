@@ -72,6 +72,8 @@ export class AppSidebarComponent {
   readonly logoIcon =
     ClipboardCheck;
 
+  readonly applicationLogo = './assets/G.png';
+
   readonly settingsIcon =
     Settings;
 private readonly auth =

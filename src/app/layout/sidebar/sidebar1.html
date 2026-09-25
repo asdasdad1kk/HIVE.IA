@@ -33,24 +33,18 @@
     >
       <div
         class="
+          sidebar-logo-box
           grid
           size-11
           shrink-0
           place-items-center
-          rounded
-          bg-gradient-to-br
-          from-blue-500
-          via-blue-600
-          to-blue-700
-          text-white
-          shadow-lg
-          shadow-blue-950/40
         "
       >
-        <lucide-icon
-          [img]="logoIcon"
-          [size]="21"
-          [strokeWidth]="2"
+        <img
+          [src]="applicationLogo"
+          alt="HIVE AI Studio"
+          class="size-8"
+          draggable="false"
         />
       </div>
 
@@ -96,115 +90,88 @@
   type="button"
   (click)="openQuickCreate()"
   class="
+    quick-create
     group
     relative
     mb-4
     flex
-    h-16
+    h-12
     w-full
     items-center
-    overflow-hidden
-    rounded
-    border
-    border-transparent
-    bg-gradient-to-br
-    from-blue-500
-    via-blue-600
-    to-blue-700
-    px-4
-    text-white
-    shadow-lg
-    shadow-blue-950/25
-    transition-all
-    duration-300
-    hover:-translate-y-px
-    hover:shadow-xl
-    hover:shadow-blue-950/35
-    focus-visible:outline
-    focus-visible:outline-2
-    focus-visible:outline-offset-2
-    focus-visible:outline-blue-500
   "
+  [class.justify-center]="collapsed()"
+  [class.px-2]="collapsed()"
+  [class.px-3]="!collapsed()"
+  [attr.title]="collapsed() ? 'Quick Create' : null"
+  [attr.aria-label]="'Crear checklist o action plan'"
 >
   <div
     class="
-      absolute
-      inset-0
-      bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.16),transparent_55%)]
-    "
-    aria-hidden="true"
-  ></div>
-
-  <div
-    class="
+      qc-icon
       relative
       flex
-      size-9
+      size-8
       shrink-0
       items-center
       justify-center
-      rounded
-      border
-      border-white/20
-      bg-white/12
-      transition-transform
-      duration-300
-      group-hover:scale-105
     "
   >
     <lucide-icon
       [img]="Plus"
-      [size]="17"
-      [strokeWidth]="2.4"
+      [size]="16"
+      [strokeWidth]="2.2"
     />
   </div>
 
-  <div
-    class="
-      relative
-      ml-3
-      flex-1
-      text-left
-    "
-  >
+  @if (!collapsed()) {
     <div
       class="
-        text-sm
-        font-semibold
-        tracking-tight
+        relative
+        ml-2.5
+        flex-1
+        text-left
+        leading-none
       "
     >
-      Quick Create
+      <div
+        class="
+          text-[13px]
+          font-semibold
+          tracking-tight
+        "
+      >
+        Quick Create
+      </div>
+
+      <div
+        class="
+          qc-sub
+          mt-1
+          text-[11px]
+          font-normal
+        "
+      >
+        Checklist o action plan
+      </div>
     </div>
 
     <div
       class="
-        mt-0.5
-        text-[11px]
-        text-white/70
+        qc-arrow
+        relative
+        flex
+        size-7
+        shrink-0
+        items-center
+        justify-center
       "
     >
-      Crear checklist o action plan
+      <lucide-icon
+        [img]="ArrowRight"
+        [size]="14"
+      />
     </div>
-  </div>
-
-  <div
-    class="
-      relative
-      flex
-      size-7
-      items-center
-      justify-center
-      transition-all
-      duration-300
-      group-hover:translate-x-1
-    "
-  >
-    <lucide-icon
-      [img]="ArrowRight"
-      [size]="14"
-    />
-  </div>
+  }
 </button>
 
 

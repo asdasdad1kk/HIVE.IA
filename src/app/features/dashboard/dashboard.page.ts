@@ -243,7 +243,7 @@ export class DashboardPage {
     toolbar: { show: false }
   };
 
-  readonly statusColors = ['#10b981', '#f59e0b', '#ef4444'];
+  readonly statusColors = ['#2f9e68', '#cf942f', '#d95f4b'];
 
   readonly statusLegend = computed<ApexLegend>(() => ({
     position: 'bottom',
@@ -299,7 +299,7 @@ export class DashboardPage {
       shade: 'dark',
       type: 'horizontal',
       shadeIntensity: 0.2,
-      gradientToColors: ['#22d3ee'],
+      gradientToColors: ['#8fb8d8'],
       inverseColors: false,
       opacityFrom: 1,
       opacityTo: 1,
@@ -405,32 +405,32 @@ export class DashboardPage {
   }));
 
   private readonly gridLineColor = computed(() =>
-    this.themeService.isDark() ? '#27272a' : '#e6e9ef'
+    this.themeService.isDark() ? '#27272a' : '#e3e1d9'
   );
 
   private readonly strongLineColor = computed(() =>
-    this.themeService.isDark() ? '#3f3f46' : '#d4d9e1'
+    this.themeService.isDark() ? '#3f3f46' : '#d5d3cb'
   );
 
   private readonly axisTextColor = computed(() =>
-    this.themeService.isDark() ? '#71717a' : '#5f6a7c'
+    this.themeService.isDark() ? '#71717a' : '#6f6e69'
   );
 
   private readonly secondaryTextColor = computed(() =>
-    this.themeService.isDark() ? '#a1a1aa' : '#5f6a7c'
+    this.themeService.isDark() ? '#a1a1aa' : '#6f6e69'
   );
 
   private readonly dataLabelColor = computed(() =>
-    this.themeService.isDark() ? '#e4e4e7' : '#272c37'
+    this.themeService.isDark() ? '#e4e4e7' : '#37352f'
   );
 
   readonly chartColors = [
-    '#3b82f6',
-    '#8b5cf6',
-    '#06b6d4',
-    '#10b981',
-    '#f59e0b',
-    '#ec4899'
+    '#41688f',
+    '#7a6fb0',
+    '#4a9ba8',
+    '#3e9e6e',
+    '#c99a3f',
+    '#c06a8a'
   ];
 
   constructor() {

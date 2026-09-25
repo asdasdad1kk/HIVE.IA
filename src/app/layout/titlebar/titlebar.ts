@@ -8,6 +8,7 @@ import {
 
 import {
   LucideAngularModule,
+  Hexagon,
   Maximize2,
   Minus,
   Moon,
@@ -40,6 +41,8 @@ export class Titlebar implements OnInit, OnDestroy {
   readonly moonIcon = Moon;
 
   readonly userIcon = UserRound;
+
+  readonly brandIcon = Hexagon;
 
   readonly applicationLogo = './assets/G.png';
 

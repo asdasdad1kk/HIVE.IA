@@ -16,27 +16,27 @@
   color-scheme: light;
   --scheme: light;
 
-  /* zinc cálido (crema) */
-  --z50: #faf7f1;
-  --z100: #201c14;
-  --z200: #2f2a20;
-  --z300: #464033;
-  --z400: #655c4a;
-  --z500: #7f7560;
-  --z600: #aaa08a;
-  --z700: #d3c5a5;
-  --z800: #e3d8bf;
-  --z900: #fffdf7;
-  --z950: #f4f0e6;
+  /* neutros papel cálido - estilo notion, tinta cálida no negra pura */
+  --z50: #fbfbfa;
+  --z100: #37352f;
+  --z200: #4f4d47;
+  --z300: #6f6e69;
+  --z400: #7e7c75;
+  --z500: #8d8b83;
+  --z600: #97948b;
+  --z700: #d8d6cf;
+  --z800: #e1dfd8;
+  --z900: #ffffff;
+  --z950: #edede9;
 
-  /* blue (acento único) */
-  --b300: #4f8df2;
-  --b400: #3b82f6;
-  --b500: #3b82f6;
-  --b600: #2563eb;
-  --b700: #1d4ed8;
-  --b900: #1e40af;
-  --b950: #172554;
+  /* tinta + steel-blue empolvado - un solo acento frío sobre el papel */
+  --b300: #6b93b8;
+  --b400: #5d84a8;
+  --b500: #41688f;
+  --b600: #37352f;
+  --b700: #2b2a25;
+  --b900: #23211d;
+  --b950: #1b1a17;
 
   /* violet (solo editores de fórmulas) */
   --v200: #8b5cf6;
@@ -81,40 +81,57 @@
   --c500: #06b6d4;
   --c600: #0891b2;
 
-  /* superficie genérica (titlebar) */
-  --bg-primary: #fffdf7;
-  --bg-secondary: #ece4d2;
-  --bg-tertiary: #e2d7bd;
-  --border-color: #e7dfcc;
-  --text-primary: #201c14;
-  --text-secondary: #655c4a;
-  --text-muted: #aaa08a;
-  --hover-bg: #ece4d2;
-  --active-start: rgb(59 130 246 / 12%);
-  --active-end: rgb(255 253 247 / 80%);
+  /* superficie genérica - papel notion */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f1;
+  --bg-tertiary: #e9e8e3;
+  --border-color: #e9e8e2;
+  --text-primary: #37352f;
+  --text-secondary: #6f6e69;
+  --text-muted: #a6a39b;
+  --hover-bg: #efeeea;
+  --active-start: rgb(55 53 47 / 8%);
+  --active-end: rgb(255 255 255 / 70%);
 
-  /* sidebar navy empresarial */
-  --sidebar-bg: #0a1830;
-  --sidebar-surface: #10233f;
-  --sidebar-border: #1a2f4f;
-  --sidebar-text: #f3f6fb;
-  --sidebar-secondary: #93a5bf;
-  --sidebar-muted: #5f7392;
-  --sidebar-hover-bg: #14273f;
-  --sidebar-hover-border: #23405f;
-  --sidebar-hover-text: #ffffff;
-  --sidebar-active-start: rgb(59 130 246 / 22%);
-  --sidebar-active-end: rgb(16 35 63 / 70%);
-  --sidebar-active-text: #ffffff;
-  --sidebar-danger-hover: rgb(239 68 68 / 14%);
+  /* sidebar notion - apenas más oscuro que el contenido, sin barra de acento */
+  --sidebar-bg: #fbfbfa;
+  --sidebar-surface: #f1f0ec;
+  --sidebar-border: #e8e7e1;
+  --sidebar-text: #37352f;
+  --sidebar-secondary: #6f6e69;
+  --sidebar-muted: #a6a39b;
+  --sidebar-hover-bg: #efeeea;
+  --sidebar-hover-border: #efeeea;
+  --sidebar-hover-text: #23211d;
+  --sidebar-active-start: #e9e8e2;
+  --sidebar-active-end: #efeeea;
+  --sidebar-active-text: #23211d;
+  --sidebar-active-accent: transparent;
+  --sidebar-active-icon: #37352f;
+  --sidebar-danger-hover: rgb(190 60 50 / 8%);
 
-  /* titlebar azul gulfstream */
-  --titlebar-bg: #0a1830;
-  --titlebar-border: #10233f;
-  --titlebar-ink: #f3f6fb;
-  --titlebar-dim: #93a5bf;
-  --titlebar-hover: #15294a;
-  --titlebar-rule: #1d3355;
+  /* logo G blanco - pastilla tinta cálida estilo notion */
+  --sidebar-logo-bg: #23211d;
+  --sidebar-logo-border: #23211d;
+
+  /* quick create silencioso - blanco con hairline, icono en pastilla tinta */
+  --qc-bg: #ffffff;
+  --qc-bg-hover: #f4f4f1;
+  --qc-border: #e0ded7;
+  --qc-text: #37352f;
+  --qc-sub: #9b9a93;
+  --qc-icon-bg: #23211d;
+  --qc-icon-border: #23211d;
+  --qc-icon-color: #ffffff;
+  --qc-arrow: #a6a39b;
+
+  /* titlebar papel - mismo fondo que el sidebar */
+  --titlebar-bg: #fbfbfa;
+  --titlebar-border: #e8e7e1;
+  --titlebar-ink: #37352f;
+  --titlebar-dim: #6f6e69;
+  --titlebar-hover: #efeeea;
+  --titlebar-rule: #e8e7e1;
 }
 
 :root.theme-zinc {
@@ -211,7 +228,24 @@
   --sidebar-active-start: rgb(37 99 235 / 18%);
   --sidebar-active-end: rgb(24 24 27 / 80%);
   --sidebar-active-text: #ffffff;
+  --sidebar-active-accent: rgb(59 130 246);
+  --sidebar-active-icon: rgb(96 165 250);
   --sidebar-danger-hover: rgb(69 10 10 / 40%);
+
+  /* logo G blanco - visible directo en oscuro */
+  --sidebar-logo-bg: transparent;
+  --sidebar-logo-border: transparent;
+
+  /* quick create velo indigo en oscuro */
+  --qc-bg: rgb(96 165 250 / 10%);
+  --qc-bg-hover: rgb(96 165 250 / 16%);
+  --qc-border: rgb(96 165 250 / 22%);
+  --qc-text: #ffffff;
+  --qc-sub: rgb(255 255 255 / 60%);
+  --qc-icon-bg: #3b82f6;
+  --qc-icon-border: #3b82f6;
+  --qc-icon-color: #ffffff;
+  --qc-arrow: rgb(255 255 255 / 45%);
 
   /* titlebar sobrio (tema oscuro) */
   --titlebar-bg: #0b0b0e;
@@ -338,7 +372,7 @@ body {
 }
 
 ::selection {
-  background: rgb(59 130 246 / 28%);
+  background: rgb(55 53 47 / 22%);
   color: var(--z100);
 }
 
@@ -526,6 +560,12 @@ app-root {
   color: var(--sidebar-muted);
 }
 
+.sidebar-logo-box {
+  background-color: var(--sidebar-logo-bg);
+  border: 1px solid var(--sidebar-logo-border);
+  border-radius: 8px;
+}
+
 .sidebar-link {
   border-color: transparent;
   border-radius: 4px;
@@ -552,7 +592,7 @@ app-root {
     );
   color: var(--sidebar-active-text);
   box-shadow:
-    inset 3px 0 0 rgb(59 130 246);
+    inset 3px 0 0 var(--sidebar-active-accent);
 }
 
 .sidebar-link-active:hover {
@@ -567,7 +607,7 @@ app-root {
 }
 
 .sidebar-link-active lucide-icon {
-  color: rgb(96 165 250);
+  color: var(--sidebar-active-icon);
 }
 
 .sidebar-action {
@@ -588,6 +628,63 @@ app-root {
 
 .sidebar-draft-delete:hover {
   background-color: var(--sidebar-danger-hover);
+}
+
+/* ========================================
+   QUICK CREATE - velo navy sobrio
+   Armoniza con el item activo del nav:
+   fondo tintado gulfstream + icono sólido,
+   sin negro macizo ni gradiente brillante.
+======================================== */
+
+.quick-create {
+  background-color: var(--qc-bg);
+  border: 1px solid var(--qc-border);
+  color: var(--qc-text);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgb(55 53 47 / 5%);
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.quick-create:hover {
+  background-color: var(--qc-bg-hover);
+  transform: none;
+  box-shadow: 0 1px 3px rgb(55 53 47 / 10%);
+}
+
+.quick-create:active {
+  transform: none;
+  box-shadow: 0 1px 2px rgb(55 53 47 / 5%);
+}
+
+.quick-create:focus-visible {
+  outline: 2px solid var(--b500);
+  outline-offset: 2px;
+}
+
+.qc-icon {
+  background-color: var(--qc-icon-bg);
+  border: 1px solid var(--qc-icon-border);
+  border-radius: 6px;
+  color: var(--qc-icon-color);
+}
+
+.qc-sub {
+  color: var(--qc-sub);
+}
+
+.qc-arrow {
+  color: var(--qc-arrow);
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+
+.quick-create:hover .qc-arrow {
+  transform: translateX(2px);
+  color: var(--qc-text);
 }
 
 /* ========================================
