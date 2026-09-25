@@ -1,0 +1,544 @@
+<aside
+  class="
+    sidebar
+    flex
+    h-full
+    shrink-0
+    flex-col
+    border-r
+    transition-[width]
+    duration-200
+  "
+  [class.w-72]="!collapsed()"
+  [class.w-[76px]]="collapsed()"
+>
+  <div
+    class="
+      sidebar-border
+      flex
+      h-20
+      items-center
+      border-b
+      px-4
+    "
+    [class.justify-center]="collapsed()"
+  >
+    <div
+      class="
+        flex
+        min-w-0
+        items-center
+        gap-3
+      "
+    >
+      <div
+        class="
+          grid
+          size-11
+          shrink-0
+          place-items-center
+          rounded-xl
+          bg-gradient-to-br
+          from-blue-500
+          via-blue-600
+          to-indigo-700
+          text-white
+          shadow-xl
+          shadow-blue-950/40
+        "
+      >
+        <lucide-icon
+          [img]="logoIcon"
+          [size]="21"
+          [strokeWidth]="2"
+        />
+      </div>
+
+      @if (!collapsed()) {
+        <div class="min-w-0">
+          <h1
+            class="
+              sidebar-text
+              
+              truncate
+              text-sm
+              font-semibold
+            "
+          >
+            AI Checklist Studio
+          </h1>
+
+          <p
+            class="
+              sidebar-text-secondary
+              mt-0.5
+              truncate
+              text-[11px]
+            "
+          >
+            Digital Forms Platform
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <nav
+    class="
+      flex-1
+      space-y-1.5
+      overflow-y-auto
+      p-3
+    "
+    aria-label="Navegación principal"
+  >
+  <button
+  type="button"
+  (click)="openQuickCreate()"
+  class="
+    group
+    relative
+    mb-4
+    flex
+    h-16
+    w-full
+    items-center
+    overflow-hidden
+    
+    border
+    border-white/5
+    bg-gradient-to-br
+    from-slate-900
+    via-slate-900
+    to-blue-950/40
+    px-4
+    transition-all
+    duration-300
+    hover:border-blue-500/30
+    hover:bg-slate-900
+    hover:shadow-[0_10px_30px_rgba(37,99,235,.15)]
+  "
+>
+  <div
+    class="
+      absolute
+      inset-0
+      bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,.18),transparent_50%)]
+    "
+  ></div>
+
+  <div
+    class="
+      relative
+      flex
+      size-10
+      shrink-0
+      items-center
+      justify-center
+    
+      border
+      border-white/10
+      bg-white/5
+      text-blue-400
+      transition-all
+      duration-300
+      group-hover:bg-blue-500/10
+      group-hover:text-blue-300
+    "
+  >
+    <lucide-icon
+      [img]="Plus"
+      [size]="18"
+      [strokeWidth]="2.5"
+    />
+  </div>
+
+  <div
+    class="
+      relative
+      ml-3
+      flex-1
+      text-left
+    "
+  >
+    <div
+      class="
+        text-sm
+        font-semibold
+        tracking-tight
+        text-slate-100
+      "
+    >
+      Quick Create
+    </div>
+
+    <div
+      class="
+        mt-0.5
+        text-[11px]
+        text-slate-400
+      "
+    >
+      Crear checklist o action plan
+    </div>
+  </div>
+
+  <div
+    class="
+      relative
+      flex
+      size-8
+      items-center
+      justify-center
+      
+      bg-white/[.03]
+      text-slate-500
+      transition-all
+      duration-300
+      group-hover:text-blue-300
+      group-hover:translate-x-1
+    "
+  >
+    <lucide-icon
+      [img]="ArrowRight"
+      [size]="14"
+    />
+  </div>
+</button>
+
+
+
+
+
+
+
+
+    @if (!collapsed()) {
+      <p
+        class="
+          sidebar-text-muted
+          mb-3
+          px-3
+          text-[10px]
+          font-semibold
+          uppercase
+          tracking-[0.18em]
+        "
+      >
+        Workspace
+      </p>
+    }
+
+    @for (
+      item of navigation;
+      track item.path
+    ) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="sidebar-link-active"
+        [routerLinkActiveOptions]="{
+          exact: item.exact === true
+        }"
+        class="
+          sidebar-link
+          group
+          relative
+          flex
+          min-h-12
+          items-center
+          border
+          transition
+        "
+        [class.justify-center]="collapsed()"
+        [class.gap-3]="!collapsed()"
+        [class.px-3]="!collapsed()"
+        [attr.title]="
+          collapsed()
+            ? item.label
+            : null
+        "
+      >
+        <lucide-icon
+          [img]="item.icon"
+          [size]="19"
+          [strokeWidth]="1.8"
+          class="shrink-0"
+        />
+
+        @if (!collapsed()) {
+          <div class="min-w-0 flex-1">
+            <span
+              class="
+                block
+                truncate
+                text-sm
+                font-medium
+              "
+            >
+              {{ item.label }}
+            </span>
+
+            <span
+              class="
+                sidebar-link-description
+                sidebar-text-muted
+                mt-0.5
+                block
+                truncate
+                text-[11px]
+              "
+            >
+              {{ item.description }}
+            </span>
+          </div>
+        }
+      </a>
+    }
+
+    @if (drafts().length > 0) {
+      <div class="mt-6">
+        @if (!collapsed()) {
+          <p
+            class="
+              sidebar-text-muted
+              mb-3
+              px-3
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-[0.18em]
+            "
+          >
+            Borradores
+          </p>
+        }
+
+        @for (
+          draft of drafts();
+          track draft.id
+        ) {
+          <div
+            class="
+              group
+              relative
+              flex
+              items-center
+            "
+          >
+            <a
+              [routerLink]="[
+                '/draft',
+                draft.id
+              ]"
+              routerLinkActive="sidebar-link-active"
+              class="
+                sidebar-link
+                flex
+                min-h-12
+                flex-1
+                items-center
+                border
+                transition
+              "
+              [class.justify-center]="collapsed()"
+              [class.gap-3]="!collapsed()"
+              [class.px-3]="!collapsed()"
+              [attr.title]="
+                collapsed()
+                  ? draft.templateName
+                  : null
+              "
+            >
+              <lucide-icon
+                [img]="ClipboardCheck"
+                [size]="18"
+                [strokeWidth]="1.8"
+                class="shrink-0"
+              />
+
+              @if (!collapsed()) {
+                <div
+                  class="
+                    min-w-0
+                    flex-1
+                  "
+                >
+                  <span
+                    class="
+                      block
+                      max-w-45
+                      truncate
+                      text-sm
+                      font-medium
+                    "
+                  >
+                    {{ draft.templateName }}
+                  </span>
+
+                  <span
+                    class="
+                      sidebar-link-description
+                      sidebar-text-muted
+                      block
+                      truncate
+                      text-[11px]
+                    "
+                  >
+                    Borrador
+                  </span>
+                </div>
+              }
+            </a>
+
+            @if (!collapsed()) {
+              <button
+                type="button"
+                class="
+                  sidebar-draft-delete
+                  absolute
+                  right-2
+                  z-10
+                  p-1
+                  text-red-400
+                  opacity-0
+                  transition
+                  duration-200
+                  hover:text-red-300
+                  group-hover:opacity-100
+                  focus-visible:opacity-100
+                  focus-visible:outline
+                  focus-visible:outline-2
+                  focus-visible:outline-red-500
+                "
+                [attr.aria-label]="
+                  'Eliminar borrador ' +
+                  draft.templateName
+                "
+                [title]="
+                  'Eliminar borrador ' +
+                  draft.templateName
+                "
+                (click)="deleteDraft(
+                  draft.id,
+                  $event
+                )"
+              >
+                <lucide-icon
+                  [img]="Trash2"
+                  [size]="14"
+                  [strokeWidth]="1.8"
+                />
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+
+  <div
+    class="
+      sidebar-border
+      border-t
+      p-3
+    "
+  >
+    <button
+      type="button"
+      class="
+        sidebar-action
+        flex
+        h-10
+        w-full
+        items-center
+        border
+        transition
+        focus-visible:outline
+        focus-visible:outline-2
+        focus-visible:outline-blue-500
+      "
+      [class.justify-center]="collapsed()"
+      [class.gap-3]="!collapsed()"
+      [class.px-3]="!collapsed()"
+      [attr.aria-label]="
+        collapsed()
+          ? 'Expandir navegación'
+          : 'Contraer navegación'
+      "
+      [title]="
+        collapsed()
+          ? 'Expandir navegación'
+          : 'Contraer navegación'
+      "
+      (click)="toggleCollapsed()"
+    >
+      <lucide-icon
+        [img]="
+          collapsed()
+            ? expandIcon
+            : collapseIcon
+        "
+        [size]="18"
+        [strokeWidth]="1.8"
+        class="shrink-0"
+      />
+
+      @if (!collapsed()) {
+        <span class="text-sm">
+          Contraer menú
+        </span>
+      }
+    </button>
+
+    @if (!collapsed()) {
+      <div
+        class="
+          sidebar-surface
+          mt-3
+          border
+          px-3
+          py-3
+        "
+      >
+        <div
+          class="
+            flex
+            items-center
+            gap-2
+          "
+        >
+          <span
+            class="
+              size-2
+              shrink-0
+              bg-emerald-400
+              shadow-[0_0_10px_rgba(52,211,153,.7)]
+            "
+            aria-hidden="true"
+          ></span>
+
+          <span
+            class="
+              sidebar-text
+              text-xs
+              font-medium
+            "
+          >
+            Base local conectada
+          </span>
+        </div>
+
+        <p
+          class="
+            sidebar-text-muted
+            mt-1.5
+            text-[10px]
+            leading-4
+          "
+        >
+          SQLite disponible mediante Electron.
+        </p>
+      </div>
+    }
+  </div>
+</aside>

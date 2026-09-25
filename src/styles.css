@@ -1,0 +1,463 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+.checklist-dialog-backdrop {
+  background: rgb(0 0 0 / 72%);
+  backdrop-filter: blur(6px);
+}
+
+.checklist-import-dialog {
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+.cdk-global-overlay-wrapper {
+  padding: 20px;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 1000;
+}
+
+.cdk-overlay-container,
+.cdk-global-overlay-wrapper {
+  inset: 0;
+  pointer-events: none;
+}
+
+.cdk-global-overlay-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cdk-overlay-pane,
+.cdk-overlay-backdrop {
+  pointer-events: auto;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: #09090b;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.app-drag-region {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.app-no-drag,
+.app-drag-region button,
+.app-drag-region a,
+.app-drag-region input {
+  -webkit-app-region: no-drag;
+}
+
+.sidebar-link-active {
+  border-color: rgb(39 39 42);
+  background:
+    linear-gradient(
+      90deg,
+      rgb(37 99 235 / 18%),
+      rgb(24 24 27 / 80%)
+    );
+  color: rgb(255 255 255);
+  box-shadow:
+    inset 3px 0 0 rgb(59 130 246);
+}
+
+.sidebar-link-active lucide-icon {
+  color: rgb(96 165 250);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgb(63 63 70)
+    transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(63 63 70);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(82 82 91);
+}
+/* =========================
+   THEMES
+========================= */
+
+:root.theme-zinc {
+  --bg-primary: rgb(9 9 11);
+  --bg-secondary: rgb(24 24 27);
+  --bg-tertiary: rgb(39 39 42);
+
+  --border-color: rgb(39 39 42);
+
+  --text-primary: rgb(244 244 245);
+  --text-secondary: rgba(127, 127, 129, 0.658);
+  --text-muted: rgb(113 113 122);
+
+  --hover-bg: rgb(39 39 42);
+
+  --active-start: rgb(37 99 235 / 18%);
+  --active-end: rgb(24 24 27 / 80%);
+}
+
+:root.theme-slate {
+  --bg-primary: rgb(10, 23, 83);
+  --bg-secondary: rgb(15 23 42);
+  --bg-tertiary: rgb(30 41 59);
+  
+  --border-color: rgb(51 65 85);
+
+  --text-primary: rgb(241 245 249);
+  --text-secondary: rgb(148 163 184);
+  --text-muted: rgb(100 116 139);
+
+  --hover-bg: rgb(30 41 59);
+
+  --active-start: rgb(37 99 235 / 20%);
+  --active-end: rgb(15 23 42 / 80%);
+}
+
+/* =========================
+   GENERIC CLASSES
+========================= */
+
+.theme-bg-primary {
+  background: var(--bg-primary);
+}
+
+.theme-bg-secondary {
+  background: var(--bg-secondary);
+}
+
+.theme-bg-tertiary {
+  background: var(--bg-tertiary);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}
+
+.theme-text {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-text-muted {
+  color: var(--text-muted);
+}
+
+
+:root,
+:root.theme-zinc {
+  --sidebar-bg: rgb(9 9 11);
+  --sidebar-surface: rgb(24 24 27);
+  --sidebar-border: rgb(39 39 42);
+
+  --sidebar-text: rgb(244 244 245);
+  --sidebar-secondary: rgb(113 113 122);
+  --sidebar-muted: rgb(82 82 91);
+
+  --sidebar-hover-bg: rgb(24 24 27);
+  --sidebar-hover-border: rgb(39 39 42);
+  --sidebar-hover-text: rgb(244 244 245);
+
+  --sidebar-active-start: rgb(37 99 235 / 18%);
+  --sidebar-active-end: rgb(24 24 27 / 80%);
+  --sidebar-active-text: rgb(255 255 255);
+
+  --sidebar-danger-hover: rgb(69 10 10 / 40%);
+}
+
+:root.theme-slate {
+
+  /* fondo general */
+  --sidebar-bg: rgb(242 240 236);
+
+  /* superficies */
+  --sidebar-surface: rgb(249 248 246);
+
+  /* bordes */
+  --sidebar-border: rgb(210 205 196);
+
+  /* texto */
+  --sidebar-text: rgb(37 43 54);
+
+  --sidebar-secondary: rgb(91 98 112);
+
+  --sidebar-muted: rgb(125 131 143);
+
+  /* hover */
+  --sidebar-hover-bg: rgb(231 227 219);
+
+  --sidebar-hover-border: rgb(189 184 174);
+
+  --sidebar-hover-text: rgb(27 33 44);
+
+  /* activo */
+  --sidebar-active-start: rgb(216 226 239);
+
+  --sidebar-active-end: rgb(225 233 244);
+
+  --sidebar-active-text: rgb(23 50 91);
+
+  /* danger */
+  --sidebar-danger-hover: rgb(248 224 224);
+}
+
+/* ========================================
+   SIDEBAR HELPERS
+======================================== */
+
+.sidebar {
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-color: var(--sidebar-border);
+}
+
+.sidebar-border {
+  border-color: var(--sidebar-border);
+}
+
+.sidebar-surface {
+  background-color: var(--sidebar-surface);
+  border-color: var(--sidebar-border);
+  color: var(--sidebar-secondary);
+}
+
+.sidebar-text {
+  color: var(--sidebar-text);
+}
+
+.sidebar-text-secondary {
+  color: var(--sidebar-secondary);
+}
+
+.sidebar-text-muted {
+  color: var(--sidebar-muted);
+}
+
+/* En Zinc equivale a:
+   text-zinc-500
+   hover:border-zinc-800
+   hover:bg-zinc-900
+   hover:text-zinc-100
+*/
+
+.sidebar-link {
+  border-color: transparent;
+  color: var(--sidebar-secondary);
+}
+
+.sidebar-link:hover {
+  border-color: var(--sidebar-hover-border);
+  background-color: var(--sidebar-hover-bg);
+  color: var(--sidebar-hover-text);
+}
+
+.sidebar-link:hover .sidebar-link-description {
+  color: var(--sidebar-secondary);
+}
+
+/* Mismo activo oscuro original:
+   zinc-800 + gradiente azul/zinc + línea azul
+*/
+
+.sidebar-link-active {
+  border-color: var(--sidebar-border);
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--sidebar-active-start),
+      var(--sidebar-active-end)
+    );
+
+  color: var(--sidebar-active-text);
+
+  box-shadow:
+    inset 3px 0 0 rgb(59 130 246);
+}
+
+.sidebar-link-active:hover {
+  border-color: var(--sidebar-border);
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--sidebar-active-start),
+      var(--sidebar-active-end)
+    );
+
+  color: var(--sidebar-active-text);
+}
+
+.sidebar-link-active lucide-icon {
+  color: rgb(96 165 250);
+}
+
+.sidebar-action {
+  background-color: color-mix(
+    in srgb,
+    var(--sidebar-surface) 60%,
+    transparent
+  );
+  border-color: var(--sidebar-border);
+  color: var(--sidebar-secondary);
+}
+
+.sidebar-action:hover {
+  background-color: var(--sidebar-surface);
+  color: var(--sidebar-hover-text);
+}
+
+.sidebar-draft-delete:hover {
+  background-color: var(--sidebar-danger-hover);
+}
+
+/* ========================================
+   SCROLLBARS
+======================================== */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgb(63 63 70)
+    transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(63 63 70);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(82 82 91);
+}
+.quick-create-btn {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 56px;
+
+  padding: 0 14px;
+
+  gap: 12px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(24, 30, 48, 0.95),
+      rgba(15, 20, 34, 0.95)
+    );
+
+  color: #fff;
+
+  transition: all .18s ease;
+}
+
+.quick-create-btn:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(28, 36, 58, 0.98),
+      rgba(18, 25, 42, 0.98)
+    );
+
+  box-shadow:
+    0 0 0 1px rgba(59,130,246,.12),
+    0 10px 25px rgba(0,0,0,.28);
+}
+
+.quick-create-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  color: white;
+}
+
+.quick-create-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.quick-create-subtitle {
+  margin-top: 4px;
+
+  font-size: 11px;
+
+  color: rgb(148 163 184);
+}
+
+.quick-create-arrow {
+  opacity: 0;
+
+  transition: all .18s ease;
+}
+
+.quick-create-btn:hover .quick-create-arrow {
+  opacity: .8;
+  transform: translateX(4px);
+}

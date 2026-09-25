@@ -1,0 +1,336 @@
+<header
+  class="
+    app-drag-region
+    theme-bg-primary
+    theme-border
+    relative z-50
+    flex h-12
+    shrink-0
+    items-center
+    border-b
+    pl-4
+    backdrop-blur-xl
+  "
+>
+
+  <div class="flex min-w-0 items-center gap-3">
+
+    <img
+      [src]="applicationLogo"
+      alt="HIVE AI"
+      class="h-12 w-12"
+    />
+
+    <div class="flex items-center gap-2">
+
+      <span
+        class="
+          text-xs
+          font-semibold
+          text-zinc-200
+
+          theme-slate:text-slate-100
+        "
+      >
+        HIVE.AI
+      </span>
+       <span
+        class="
+          hidden
+          h-3 w-px
+          bg-zinc-700
+          sm:block
+        "
+      ></span>
+      <span
+        class="
+          hidden
+          text-[11px]
+          text-zinc-500
+
+          md:block
+        "
+      >
+        Human Integrated Verification Engine
+      </span>
+
+    </div>
+
+  </div>
+
+  <div
+    class="
+      ml-auto
+      flex
+      h-full
+      items-stretch
+    "
+  >
+    <div
+  class="
+    app-no-drag
+    mr-3
+    hidden
+    lg:flex
+  "
+>
+  <button
+    type="button"
+    cdkOverlayOrigin
+    #userOrigin="cdkOverlayOrigin"
+    (mouseenter)="userTooltipOpen.set(true)"
+    (mouseleave)="userTooltipOpen.set(false)"
+    class="
+      flex h-12 w-12
+      items-center
+      justify-center
+      rounded-full
+      
+      transition-all
+     
+    "
+  >
+  <div
+
+class="
+
+flex h-7 w-7
+
+items-center
+
+justify-center
+
+rounded-full
+
+border border-emerald-900/70
+      bg-emerald-500/10
+      text-emerald-300
+ hover:border-emerald-500/40
+      hover:bg-emerald-500/15
+"
+>
+    <lucide-icon
+      [img]="userIcon"
+      class="h-4 w-4"
+    /></div>
+  </button>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="userOrigin"
+    [cdkConnectedOverlayOpen]="userTooltipOpen()"
+    [cdkConnectedOverlayPositions]="[
+      {
+        originX: 'end',
+        originY: 'bottom',
+        overlayX: 'end',
+        overlayY: 'top',
+        offsetY: 8
+      }
+    ]"
+  >
+    <div
+      (mouseenter)="userTooltipOpen.set(true)"
+      (mouseleave)="userTooltipOpen.set(false)"
+      class="
+        w-72
+        rounded-xl
+        border border-zinc-800
+        bg-zinc-950/95
+        p-4
+        shadow-2xl
+        backdrop-blur-xl
+      "
+    >
+      @if (auth.loading()) {
+        <div class="text-sm text-zinc-400">
+          Cargando usuario...
+        </div>
+      } @else {
+        <div class="mb-3 flex items-center gap-3">
+          <div
+            class="
+              flex h-10 w-10
+              items-center
+              justify-center
+              rounded-full
+              bg-emerald-500/15
+              text-emerald-400
+            "
+          >
+            <lucide-icon
+              [img]="userIcon"
+              class="h-5 w-5"
+            />
+          </div>
+
+          <div>
+            <p
+              class="
+                text-sm
+                font-semibold
+                text-zinc-100
+              "
+            >
+              {{ auth.user()?.name }}
+            </p>
+
+            <p
+              class="
+                text-xs
+                text-zinc-500
+              "
+            >
+              {{ auth.user()?.email }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="
+            space-y-2
+            border-t border-zinc-800
+            pt-3
+            text-xs
+          "
+        >
+          <div class="flex justify-between">
+            <span class="text-zinc-500">
+              Usuario
+            </span>
+
+            <span class="text-zinc-200">
+              {{ auth.user()?.username }}
+            </span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-zinc-500">
+              Equipo
+            </span>
+
+            <span class="text-zinc-200">
+              {{ auth.user()?.computer }}
+            </span>
+          </div>
+            <div class="flex justify-between">
+            <span class="text-zinc-500">
+              Rol
+            </span>
+
+            <span class="text-zinc-200">
+              {{ auth.user()?.role }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+</div>
+    <!-- THEME TOGGLE -->
+
+    <button
+      type="button"
+      class="
+        app-no-drag
+
+        flex
+        w-12
+        items-center
+        justify-center
+
+        text-zinc-400
+
+        transition
+
+        hover:bg-zinc-800
+        hover:text-white
+      "
+      (click)="toggleTheme()"
+      [title]="theme() === 'zinc'
+        ? 'Cambiar a Slate'
+        : 'Cambiar a Zinc'"
+    >
+
+      <lucide-icon
+        [img]="theme() === 'zinc'
+          ? moonIcon
+          : sunIcon"
+        [size]="17"
+      />
+
+    </button>
+
+    <!-- MINIMIZE -->
+
+    <button
+      type="button"
+      class="
+        app-no-drag
+        grid
+        w-12
+        place-items-center
+        text-zinc-400
+        transition
+        hover:bg-zinc-800
+        hover:text-white
+      "
+      (click)="minimize()"
+    >
+      <lucide-icon
+        [img]="minimizeIcon"
+        [size]="17"
+      />
+    </button>
+
+    <!-- MAX -->
+
+    <button
+      type="button"
+      class="
+        app-no-drag
+        grid
+        w-12
+        place-items-center
+        text-zinc-400
+        transition
+        hover:bg-zinc-800
+        hover:text-white
+      "
+      (click)="toggleMaximize()"
+    >
+      <lucide-icon
+        [img]="
+          isMaximized()
+            ? restoreIcon
+            : maximizeIcon
+        "
+        [size]="15"
+      />
+    </button>
+
+    <!-- CLOSE -->
+
+    <button
+      type="button"
+      class="
+        app-no-drag
+        grid
+        w-12
+        place-items-center
+        text-zinc-400
+        transition
+        hover:bg-red-600
+        hover:text-white
+      "
+      (click)="close()"
+    >
+      <lucide-icon
+        [img]="closeIcon"
+        [size]="18"
+      />
+    </button>
+
+  </div>
+
+</header>

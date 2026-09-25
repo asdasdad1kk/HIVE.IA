@@ -1,0 +1,604 @@
+<app-page-header
+      title="Historial"
+      description="Consulta las respuestas agrupadas por plantilla."
+    />
+
+    @if (errorMessage()) {
+      <div
+        role="alert"
+        class="
+          mb-6
+          rounded-xl
+          border border-red-900
+          bg-red-950/40
+          px-4 py-3
+          text-sm text-red-300
+        "
+      >
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (loading()) {
+      <div
+        class="
+          rounded-2xl
+          border border-zinc-800
+          bg-zinc-900
+          p-10
+          text-center
+        "
+      >
+        <p class="text-sm text-zinc-400">
+          Cargando historial...
+        </p>
+      </div>
+    }
+
+    @if (!loading() && templateGroups().length === 0) {
+      <div
+        class="
+          rounded-2xl
+          border border-dashed border-zinc-700
+          bg-zinc-900/40
+          p-12
+          text-center
+        "
+      >
+        <div
+          class="
+            mx-auto
+            flex size-14
+            items-center justify-center
+            rounded-2xl
+            bg-zinc-800
+            text-zinc-500
+          "
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            class="size-7"
+          >
+            <path
+              d="M8 7h8M8 11h8M8 15h5"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M6 3.5h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z"
+            />
+          </svg>
+        </div>
+
+        <h2 class="mt-4 font-semibold text-zinc-300">
+          Sin historial
+        </h2>
+
+        <p class="mt-2 text-sm text-zinc-500">
+          Todavía no hay checklists guardados.
+        </p>
+      </div>
+    }
+
+    @if (!loading() && templateGroups().length > 0) {
+      <section aria-labelledby="template-history-title">
+        <div
+          class="
+            mb-4
+            flex flex-wrap
+            items-end justify-between
+            gap-3
+          "
+        >
+          <div>
+            <h2
+              id="template-history-title"
+              class="text-lg font-semibold text-zinc-100"
+            >
+              Plantillas
+            </h2>
+
+            <p class="mt-1 text-sm text-zinc-500">
+              Selecciona una plantilla para consultar sus capturas.
+            </p>
+          </div>
+
+          <span
+            class="
+              rounded-full
+              border border-zinc-800
+              bg-zinc-900
+              px-3 py-1.5
+              text-xs text-zinc-400
+            "
+          >
+            {{ templateGroups().length }}
+            plantillas
+          </span>
+        </div>
+
+        <div
+          class="
+            grid gap-4
+            sm:grid-cols-2
+            xl:grid-cols-3
+            2xl:grid-cols-4
+          "
+        >
+          @for (
+            group of templateGroups();
+            track group.templateId
+          ) {
+            <button
+              type="button"
+              class="
+                rounded-2xl
+                border
+                p-5
+                text-left
+                transition
+                focus-visible:outline
+                focus-visible:outline-2
+                focus-visible:outline-offset-2
+                focus-visible:outline-blue-500
+              "
+              [class.border-blue-500]="
+                selectedTemplateId() === group.templateId
+              "
+              [class.bg-blue-950/30]="
+                selectedTemplateId() === group.templateId
+              "
+              [class.border-zinc-800]="
+                selectedTemplateId() !== group.templateId
+              "
+              [class.bg-zinc-900]="
+                selectedTemplateId() !== group.templateId
+              "
+              [attr.aria-pressed]="
+                selectedTemplateId() === group.templateId
+              "
+              (click)="selectTemplate(group.templateId)"
+            >
+              <div
+                class="
+                  flex
+                  items-start justify-between
+                  gap-4
+                "
+              >
+                <div
+                  class="
+                    flex size-11
+                    items-center justify-center
+                    rounded-xl
+                  "
+                  [class.bg-blue-500/20]="
+                    selectedTemplateId() === group.templateId
+                  "
+                  [class.text-blue-300]="
+                    selectedTemplateId() === group.templateId
+                  "
+                  [class.bg-zinc-800]="
+                    selectedTemplateId() !== group.templateId
+                  "
+                  [class.text-zinc-400]="
+                    selectedTemplateId() !== group.templateId
+                  "
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    class="size-5"
+                  >
+                    <path
+                      d="M9 5h6M9 9h6M9 13h4"
+                      stroke-linecap="round"
+                    />
+
+                    <path
+                      d="M6.5 3.5h11a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z"
+                    />
+                  </svg>
+                </div>
+
+                <span
+                  class="
+                    rounded-full
+                    bg-zinc-800
+                    px-2.5 py-1
+                    text-xs font-medium
+                    text-zinc-300
+                  "
+                >
+                  {{ group.total }}
+                  capturas
+                </span>
+              </div>
+
+              <h3
+                class="
+                  mt-4
+                  truncate
+                  font-semibold
+                  text-zinc-100
+                "
+                [title]="group.templateName"
+              >
+                {{ group.templateName }}
+              </h3>
+
+              <p class="mt-1 text-xs text-zinc-500">
+                ID de plantilla:
+                {{ group.templateId }}
+              </p>
+
+              <div class="mt-5 grid grid-cols-3 gap-2">
+                <div
+                  class="
+                    rounded-xl
+                    bg-emerald-500/10
+                    px-3 py-2
+                  "
+                >
+                  <span
+                    class="
+                      block
+                      text-lg font-semibold
+                      text-emerald-300
+                    "
+                  >
+                    {{ group.completed }}
+                  </span>
+
+                  <span class="text-xs text-emerald-400/70">
+                    Listos
+                  </span>
+                </div>
+
+                <div
+                  class="
+                    rounded-xl
+                    bg-amber-500/10
+                    px-3 py-2
+                  "
+                >
+                  <span
+                    class="
+                      block
+                      text-lg font-semibold
+                      text-amber-300
+                    "
+                  >
+                    {{ group.drafts }}
+                  </span>
+
+                  <span class="text-xs text-amber-400/70">
+                    Draft
+                  </span>
+                </div>
+
+                <div
+                  class="
+                    rounded-xl
+                    bg-red-500/10
+                    px-3 py-2
+                  "
+                >
+                  <span
+                    class="
+                      block
+                      text-lg font-semibold
+                      text-red-300
+                    "
+                  >
+                    {{ group.cancelled }}
+                  </span>
+
+                  <span class="text-xs text-red-400/70">
+                    Cancel.
+                  </span>
+                </div>
+              </div>
+            </button>
+          }
+        </div>
+      </section>
+    }
+
+    @if (
+      !loading() &&
+      selectedTemplateGroup();
+      as selectedGroup
+    ) {
+      <section
+        class="
+          mt-8
+          overflow-hidden
+          rounded-2xl
+          border border-zinc-800
+          bg-zinc-950
+        "
+        aria-labelledby="selected-template-title"
+      >
+        <header
+          class="
+            flex flex-wrap
+            items-center justify-between
+            gap-4
+            border-b border-zinc-800
+            bg-zinc-900
+            px-5 py-4
+          "
+        >
+          <div>
+            <p
+              class="
+                text-xs font-semibold
+                uppercase
+                tracking-[0.18em]
+                text-blue-400
+              "
+            >
+              Respuestas
+            </p>
+
+            <h2
+              id="selected-template-title"
+              class="
+                mt-1
+                text-lg font-semibold
+                text-zinc-100
+              "
+            >
+              {{ selectedGroup.templateName }}
+            </h2>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span
+              class="
+                rounded-full
+                border border-zinc-700
+                bg-zinc-950
+                px-3 py-1.5
+                text-xs text-zinc-400
+              "
+            >
+              {{ selectedGroup.total }}
+              registros
+            </span>
+
+            <button
+              type="button"
+              class="
+                rounded-lg
+                border border-zinc-700
+                bg-zinc-950
+                px-3 py-1.5
+                text-xs text-zinc-300
+                transition
+                hover:bg-zinc-800
+              "
+              (click)="clearSelection()"
+            >
+              <span class="inline-flex items-center gap-1.5"><lucide-icon [img]="X" [size]="14" />Cerrar</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm">
+            <thead
+              class="
+                bg-zinc-900/60
+                text-xs
+                uppercase
+                tracking-wide
+                text-zinc-500
+              "
+            >
+              <tr>
+                <th
+                  scope="col"
+                  class="
+                    sticky left-0
+                    z-20 min-w-20
+                    border-r border-zinc-800
+                    bg-zinc-900
+                    px-4 py-3
+                  "
+                >
+                  ID
+                </th>
+
+                <th
+                  scope="col"
+                  class="min-w-32 px-4 py-3"
+                >
+                  Estado
+                </th>
+
+                <th
+                  scope="col"
+                  class="min-w-40 px-4 py-3"
+                >
+                  Usuario
+                </th>
+
+                <th
+                  scope="col"
+                  class="min-w-44 px-4 py-3"
+                >
+                  Creado
+                </th>
+
+                <th
+                  scope="col"
+                  class="min-w-44 px-4 py-3"
+                >
+                  Actualizado
+                </th>
+                @if (this.auth.isAdmin()) {
+                <th scope="col" class="w-24 px-4 py-3 text-center">Abrir</th>
+}
+                @for (
+                        column of responseColumns();
+                        track column.key
+                        ) {
+                        <th
+                            scope="col"
+                            class="min-w-44 px-4 py-3"
+                            [title]="column.label"
+                        >
+                            {{ column.label }}
+                        </th>
+                        }
+                      
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (
+                row of parsedSubmissions();
+                track row.submission.id
+              ) {
+                <tr
+                  class="
+                    border-t
+                    border-zinc-800
+                    transition
+                    hover:bg-zinc-900/70
+                  "
+                >
+                  <td
+                    class="
+                      sticky left-0
+                      z-10
+                      border-r border-zinc-800
+                      bg-zinc-950
+                      px-4 py-3
+                      font-medium
+                      text-zinc-200
+                    "
+                  >
+                    #{{ row.submission.id }}
+                  </td>
+
+                  <td class="px-4 py-3">
+                    <span
+                      class="
+                        inline-flex
+                        rounded-full
+                        px-2.5 py-1
+                        text-xs font-medium
+                      "
+                      [class.bg-emerald-500/10]="
+                        row.submission.status === 'COMPLETE'
+                      "
+                      [class.text-emerald-300]="
+                        row.submission.status === 'COMPLETE'
+                      "
+                      [class.bg-amber-500/10]="
+                        row.submission.status === 'DRAFT'
+                      "
+                      [class.text-amber-300]="
+                        row.submission.status === 'DRAFT'
+                      "
+                      [class.bg-red-500/10]="
+                        row.submission.status === 'CANCELLED'
+                      "
+                      [class.text-red-300]="
+                        row.submission.status === 'CANCELLED'
+                      "
+                    >
+                      {{ statusLabel(row.submission.status) }}
+                    </span>
+                  </td>
+
+                  <td class="px-4 py-3 text-zinc-300">
+                    {{
+                      row.submission.submittedBy ||
+                      'Sin usuario'
+                    }}
+                  </td>
+
+                  <td
+                    class="
+                      whitespace-nowrap
+                      px-4 py-3
+                      text-zinc-400
+                    "
+                  >
+                    {{
+                      formatDate(
+                        row.submission.createdAt
+                      )
+                    }}
+                  </td>
+
+                  <td
+                    class="
+                      whitespace-nowrap
+                      px-4 py-3
+                      text-zinc-400
+                    "
+                  >
+                    {{
+                      formatDate(
+                        row.submission.updatedAt
+                      )
+                    }}
+                  </td>
+                   @if (this.auth.isAdmin()) {
+                  <td class="px-4 py-3 text-center">
+                    <a [routerLink]="['/draft', row.submission.id]" class="inline-flex size-9 items-center justify-center rounded-lg border border-blue-500/40 bg-blue-500/10 text-blue-300 transition hover:bg-blue-500/20" [attr.aria-label]="'Abrir checklist ' + row.submission.id" title="Abrir checklist">
+                      <lucide-icon [img]="ExternalLink" [size]="16" />
+                    </a>
+                  </td>
+                }
+                  @for (
+  column of responseColumns();
+  track column.key
+) {
+  <td
+    class="
+      max-w-80
+      px-4 py-3
+      text-zinc-300
+    "
+  >
+    <div
+      class="
+        max-h-28
+        overflow-auto
+        whitespace-pre-wrap
+        break-words
+      "
+      [title]="
+        formatValue(
+          row.responses[column.key]
+        )
+      "
+    >
+      {{
+        formatValue(
+          row.responses[column.key]
+        )
+      }}
+    </div>
+  </td>
+}
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }

@@ -1,0 +1,429 @@
+<app-page-header
+  title="Plantillas"
+  description="Crea, importa, edita y ejecuta tus checklists."
+>
+  <app-button
+    variant="secondary"
+    [icon]="Upload"
+    [loading]="importing()"
+    loadingText="Importando..."
+    ariaLabel="Importar plantilla desde un archivo JSON"
+    (pressed)="openImportDialog()"
+  >
+    Importar o crear con IA
+  </app-button>
+
+  <app-button
+    variant="primary"
+    [icon]="Plus"
+    [link]="['/templates/new']"
+    ariaLabel="Crear una nueva plantilla"
+  >
+    Nueva plantilla
+  </app-button>
+</app-page-header>
+
+@if (successMessage()) {
+  <div
+    role="status"
+    aria-live="polite"
+    class="mb-5 rounded-xl border border-emerald-800 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-300"
+  >
+    {{ successMessage() }}
+  </div>
+}
+
+@if (errorMessage()) {
+  <div
+    role="alert"
+    aria-live="assertive"
+    class="mb-5 rounded-xl border border-red-900 bg-red-950/40 px-4 py-3 text-sm text-red-300"
+  >
+    {{ errorMessage() }}
+  </div>
+}
+
+@if (loading()) {
+  <div
+    class="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900"
+    aria-busy="true"
+    aria-label="Cargando plantillas"
+  >
+    <div
+      class="border-b border-zinc-800 px-5 py-4"
+    >
+      <div
+        class="h-4 w-40 animate-pulse rounded bg-zinc-800"
+      ></div>
+    </div>
+
+    <div class="space-y-px">
+      @for (row of [1, 2, 3, 4]; track row) {
+        <div
+          class="grid grid-cols-[minmax(0,1fr)_110px_140px] items-center gap-4 border-b border-zinc-800/70 px-5 py-4 last:border-b-0"
+        >
+          <div class="min-w-0 space-y-2">
+            <div
+              class="h-4 w-48 animate-pulse rounded bg-zinc-800"
+            ></div>
+
+            <div
+              class="h-3 w-72 max-w-full animate-pulse rounded bg-zinc-800/70"
+            ></div>
+          </div>
+
+          <div
+            class="h-6 w-16 animate-pulse rounded-full bg-zinc-800"
+          ></div>
+
+          <div
+            class="ml-auto h-9 w-28 animate-pulse rounded-lg bg-zinc-800"
+          ></div>
+        </div>
+      }
+    </div>
+
+    <p class="sr-only">
+      Cargando plantillas...
+    </p>
+  </div>
+} @else if (templates().length === 0) {
+  <div
+    class="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/30 p-10 text-center"
+  >
+    <div
+      class="mx-auto flex size-14 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800 text-zinc-400 shadow-lg shadow-black/20"
+      aria-hidden="true"
+    >
+      <app-button
+        variant="ghost"
+        size="icon"
+        [icon]="FileJson2"
+        [disabled]="true"
+        ariaLabel="No hay plantillas"
+      />
+    </div>
+
+    <h2 class="mt-4 font-semibold text-zinc-200">
+      No hay plantillas
+    </h2>
+
+    <p class="mt-2 text-sm text-zinc-500">
+      Crea una plantilla o importa un archivo JSON.
+    </p>
+
+    <div
+      class="mt-5 flex flex-wrap justify-center gap-2"
+    >
+      <app-button
+        variant="secondary"
+        [icon]="Upload"
+        [loading]="importing()"
+        loadingText="Importando..."
+        ariaLabel="Importar plantilla desde un archivo JSON"
+        (pressed)="openImportDialog()"
+      >
+        Importar JSON
+      </app-button>
+
+      <app-button
+        variant="primary"
+        [icon]="Plus"
+        [link]="['/templates/new']"
+        ariaLabel="Crear una nueva plantilla"
+      >
+        Crear plantilla
+      </app-button>
+    </div>
+  </div>
+} @else {
+  <section
+    class="overflow-hidden  border border-zinc-800 bg-zinc-900 shadow-xl shadow-black/10"
+    aria-labelledby="templates-table-title"
+  >
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800 bg-zinc-900/80 px-5 py-4"
+    >
+      <div>
+        <h2
+          id="templates-table-title"
+          class="text-sm font-semibold text-zinc-100"
+        >
+          Plantillas disponibles
+        </h2>
+
+        <p class="mt-0.5 text-xs text-zinc-500">
+          {{ templates().length }}
+
+          {{
+            templates().length === 1
+              ? 'plantilla registrada'
+              : 'plantillas registradas'
+          }}
+        </p>
+      </div>
+
+      <div class="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+        <label class="relative min-w-64 flex-1 sm:flex-none">
+          <span class="sr-only">Buscar plantillas</span>
+          <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-600" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="size-4">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-3.5-3.5" stroke-linecap="round"></path>
+            </svg>
+          </span>
+          <input
+            type="search"
+            [value]="searchTerm()"
+            (input)="updateSearch($any($event.target).value)"
+            placeholder="Buscar por nombre o descripción"
+            autocomplete="off"
+            class="h-10 w-full rounded-xl border border-zinc-700 bg-zinc-950 pl-10 pr-10 text-sm text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 sm:w-80"
+          />
+          @if (searchTerm()) {
+            <button
+              type="button"
+              class="absolute inset-y-0 right-2 grid w-8 place-items-center rounded-lg text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200"
+              aria-label="Limpiar búsqueda"
+              title="Limpiar búsqueda"
+              (click)="clearSearch()"
+            >
+              ×
+            </button>
+          }
+        </label>
+        <div class="inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs text-zinc-500">
+          <span class="size-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
+          {{ filteredTemplates().length }} visibles
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table
+        class="w-full min-w-[820px] border-collapse"
+      >
+        <thead>
+          <tr
+            class="border-b border-zinc-800 bg-zinc-950/50 text-left"
+          >
+            <th
+              scope="col"
+              class="px-5 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
+            >
+              Plantilla
+            </th>
+
+            <th
+              scope="col"
+              class="w-28 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
+            >
+              Versión
+            </th>
+
+            <th
+              scope="col"
+              class="w-32 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-500"
+            >
+              Estado
+            </th>
+
+            <th
+              scope="col"
+              class="w-56 px-5 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500"
+            >
+              Acciones
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-zinc-800/80">
+          @for (item of filteredTemplates(); track item.id) {
+            <tr
+              class="group transition-colors hover:bg-zinc-800/35"
+            >
+              <td class="px-5 py-4">
+                <div
+                  class="flex min-w-0 items-center gap-3"
+                >
+                  <div
+                    class="flex size-10 shrink-0 items-center justify-center rounded-xl border border-zinc-700/80 bg-zinc-800/70 text-zinc-400 transition group-hover:border-blue-500/40 group-hover:bg-blue-950/30 group-hover:text-blue-300"
+                    aria-hidden="true"
+                  >
+                    <app-button
+                      variant="ghost"
+                      size="icon"
+                      [icon]="FileJson2"
+                      [disabled]="true"
+                      ariaLabel="Plantilla"
+                    />
+                  </div>
+
+                  <div class="min-w-0">
+                    <p
+                      class="truncate text-sm font-semibold text-zinc-100"
+                      [title]="item.name"
+                    >
+                      {{ item.name }}
+                    </p>
+
+                    <p
+                      class="mt-1 max-w-xl truncate text-xs text-zinc-500"
+                      [title]="
+                        item.description ||
+                        'Sin descripción'
+                      "
+                    >
+                      {{
+                        item.description ||
+                          'Sin descripción'
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </td>
+
+              <td class="px-5 py-4">
+                <span
+                  class="inline-flex min-w-9 items-center justify-center rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 font-mono text-xs text-zinc-300"
+                >
+                  v{{ item.version }}
+                </span>
+              </td>
+
+              <td class="px-5 py-4">
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium"
+                  [class.border-emerald-800]="
+                    item.isActive === 1
+                  "
+                  [class.bg-emerald-950/40]="
+                    item.isActive === 1
+                  "
+                  [class.text-emerald-300]="
+                    item.isActive === 1
+                  "
+                  [class.border-zinc-700]="
+                    item.isActive !== 1
+                  "
+                  [class.bg-zinc-800]="
+                    item.isActive !== 1
+                  "
+                  [class.text-zinc-400]="
+                    item.isActive !== 1
+                  "
+                >
+                  <span
+                    class="size-1.5 rounded-full"
+                    [class.bg-emerald-400]="
+                      item.isActive === 1
+                    "
+                    [class.bg-zinc-500]="
+                      item.isActive !== 1
+                    "
+                    aria-hidden="true"
+                  ></span>
+
+                  {{
+                    item.isActive === 1
+                      ? 'Activa'
+                      : 'Inactiva'
+                  }}
+                </span>
+              </td>
+
+              <td class="px-5 py-4">
+                <div
+                  class="flex items-center justify-end gap-1.5"
+                >
+                  
+                    <app-button
+                      variant="success"
+                      size="icon"
+                      [icon]="Play"
+                      [link]="['/run', item.id]"
+                      [ariaLabel]="
+                        'Ejecutar plantilla ' +
+                        item.name
+                      "
+                      title="Ejecutar"
+                    />
+                  
+@if (auth.isAdmin()) {
+                  <app-button
+                    variant="secondary"
+                    size="icon"
+                    [icon]="Pencil"
+                    [link]="[
+                      '/templates',
+                      item.id,
+                      'edit'
+                    ]"
+                    [ariaLabel]="
+                      'Editar plantilla ' +
+                      item.name
+                    "
+                    title="Editar"
+                  />
+<app-button
+  variant="secondary"
+  size="icon"
+  [icon]="Copy"
+  [loading]="exportingId() === item.id"
+  [disabled]="
+    exportingId() !== null &&
+    exportingId() !== item.id
+  "
+  [ariaLabel]="
+    exportingId() === item.id
+      ? 'Copiando plantilla ' + item.name
+      : 'Copiar JSON de la plantilla ' + item.name
+  "
+  title="Copiar JSON"
+  (pressed)="exportTemplate(item)"
+/>
+                    <app-button
+                      variant="danger"
+                      size="icon"
+                      [icon]="Trash2"
+                      [loading]="
+                        deletingId() === item.id
+                      "
+                      [disabled]="
+                        deletingId() !== null &&
+                        deletingId() !== item.id
+                      "
+                      [ariaLabel]="
+                        deletingId() === item.id
+                          ? 'Eliminando plantilla ' +
+                            item.name
+                          : 'Eliminar plantilla ' +
+                            item.name
+                      "
+                      title="Eliminar"
+                      (pressed)="remove(item)"
+                    />
+                  }
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="px-5 py-12 text-center">
+                <p class="text-sm font-medium text-zinc-300">No se encontraron plantillas</p>
+                <p class="mt-1 text-xs text-zinc-600">Prueba con otro nombre, descripción, versión o estado.</p>
+                <button
+                  type="button"
+                  class="mt-4 rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs font-medium text-zinc-300 hover:border-blue-500 hover:text-blue-300"
+                  (click)="clearSearch()"
+                >
+                  Limpiar búsqueda
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}

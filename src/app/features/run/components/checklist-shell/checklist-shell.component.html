@@ -1,0 +1,457 @@
+<div
+  class="min-h-full bg-zinc-950 text-zinc-100"
+  [class.pb-32]="showFooter() && !previewMode()"
+>
+@if(!previewMode()){
+  <header
+    class="sticky top-0 z-30 border-b border-zinc-800/90 bg-zinc-950/95 shadow-lg shadow-black/10 backdrop-blur-xl"
+  >
+    @if (!compactHeader() || previewMode()) {
+      <div class="mx-auto max-w-[1800px] px-4 py-5 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span class="inline-flex items-center rounded-md border border-blue-500/20 bg-blue-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-blue-300">
+                {{ previewMode() ? 'Vista previa' : 'Formulario operativo' }}
+              </span>
+
+              <span class="text-xs text-zinc-500">
+                {{ itemCount() }} campos
+              </span>
+
+              <span class="hidden text-xs text-zinc-400 sm:inline">
+                {{ answeredCount() }} respondidos
+              </span>
+
+              <span class="hidden text-xs text-zinc-400 sm:inline">
+                {{ itemCount() - answeredCount() }} pendientes
+              </span>
+            </div>
+
+            <h1 class="mt-3 truncate text-2xl font-semibold tracking-tight text-white lg:text-3xl">
+              {{ templateName() || 'Plantilla sin nombre' }}
+            </h1>
+
+            <p class="mt-1.5 max-w-3xl text-sm leading-6 text-zinc-400">
+              {{
+                templateDescription() ||
+                'Captura y valida la información requerida para completar el checklist.'
+              }}
+            </p>
+          </div>
+
+          <div class="flex shrink-0 items-center gap-3">
+            <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-2.5">
+              <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Respondidas
+              </p>
+
+              <p class="mt-0.5 text-lg font-semibold text-white">
+                {{ answeredCount() }}
+                <span class="text-sm font-normal text-zinc-500">
+                  / {{ itemCount() }}
+                </span>
+              </p>
+            </div>
+
+            <div
+              class="grid size-14 place-items-center rounded-xl border border-blue-500/20 bg-blue-500/10"
+              aria-label="Progreso del checklist"
+            >
+              <span class="text-sm font-bold text-blue-200">
+                {{ progress() }}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 flex items-center gap-3">
+          <div
+            class="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-800"
+            role="progressbar"
+            aria-label="Progreso del checklist"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [attr.aria-valuenow]="progress()"
+          >
+            <div
+              class="h-full rounded-full bg-gradient-to-r from-blue-600 via-blue-400 to-cyan-400 transition-[width] duration-500"
+              [style.width.%]="progress()"
+            ></div>
+          </div>
+
+          <span class="text-[11px] font-medium text-zinc-500">
+            {{ progress() }}% completado
+          </span>
+        </div>
+      </div>
+    } @else {
+      <div class="mx-auto flex h-12 max-w-[1800px] items-center gap-4 px-4 sm:px-6 lg:px-8">
+        <span class="size-2 shrink-0 rounded-full bg-blue-400" aria-hidden="true"></span>
+
+        <h1 class="min-w-0 flex-1 truncate text-sm font-semibold text-white">
+          {{ templateName() }}
+        </h1>
+
+        <span class="text-xs text-zinc-500">
+          {{ answeredCount() }}/{{ itemCount() }}
+        </span>
+
+        <span class="min-w-9 text-right text-xs font-bold text-blue-300">
+          {{ progress() }}%
+        </span>
+      </div>
+    }
+  </header>
+}
+  <div
+    class="mx-auto grid max-w-[1800px] grid-cols-1 gap-8 px-4 py-8 sm:px-6 lg:px-8"
+    [class.lg:grid-cols-[244px_minmax(0,1fr)]]="hasNavigation()"
+  >
+    @if (hasNavigation()) {
+      <aside class="hidden lg:block">
+        <nav class="sticky top-24 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/60 p-2" aria-label="Secciones del checklist">
+          <p class="px-3 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-600">Secciones</p>
+          @for (navSection of navigationSections(); track navSection.id; let navIndex = $index) {
+            <a [href]="'#shell-section-' + navSection.id" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-zinc-400 transition hover:bg-zinc-800 hover:text-zinc-100">
+              <span class="grid size-6 shrink-0 place-items-center rounded-md border border-zinc-700 bg-zinc-950 text-[10px] font-semibold text-blue-300">{{ navIndex + 1 }}</span>
+              <span class="truncate">{{ navSection.title }}</span>
+            </a>
+          }
+        </nav>
+      </aside>
+    }
+    <main class="min-w-0 space-y-14">
+  @for (
+    section of definition().sections;
+    track section.id;
+    let sectionIndex = $index
+  ) {
+    <section
+      [id]="'shell-section-' + section.id"
+      class="scroll-mt-20"
+      [attr.aria-labelledby]="
+        'shell-section-title-' +
+        section.id
+      "
+    >
+      <header
+        class="mb-5 flex items-start gap-4"
+      >
+        <span
+          class="grid size-9 shrink-0 place-items-center rounded-full border border-blue-500/30 bg-zinc-950 text-xs font-bold text-blue-300"
+          aria-hidden="true"
+        >
+          {{ sectionIndex + 1 }}
+        </span>
+
+        <div
+          class="min-w-0 flex-1 border-b border-zinc-800 pb-4"
+        >
+          <div
+            class="flex flex-wrap items-center gap-2"
+          >
+            <h2
+              [id]="
+                'shell-section-title-' +
+                section.id
+              "
+              class="text-lg font-semibold tracking-tight text-white"
+            >
+              {{ section.title }}
+            </h2>
+
+            <!-- <span
+              class="rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
+              [class.border-violet-800]="
+                section.view === 'matrix'
+              "
+              [class.bg-violet-500/10]="
+                section.view === 'matrix'
+              "
+              [class.text-violet-300]="
+                section.view === 'matrix'
+              "
+              [class.border-blue-800]="
+                section.view !== 'matrix'
+              "
+              [class.bg-blue-500/10]="
+                section.view !== 'matrix'
+              "
+              [class.text-blue-300]="
+                section.view !== 'matrix'
+              "
+            >
+              {{
+                section.view === 'matrix'
+                  ? 'Matriz'
+                  : 'Formulario'
+              }}
+            </span> -->
+            <span
+  class="rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider"
+>
+  {{
+    section.view === 'matrix'
+      ? 'Matriz'
+      : section.view === 'action-plan'
+        ? 'Plan de acción'
+        : 'Formulario'
+  }}
+</span>
+
+          </div>
+
+          <p
+            class="mt-1 text-xs text-zinc-500"
+          >
+            Completa los
+            {{ sectionCount(section) }}
+            {{ sectionCountLabel(section) }}
+            de esta sección
+          </p>
+        </div>
+      </header>
+
+
+
+     @if (section.view === 'matrix') {
+  <div class="sm:ml-[52px]">
+    <app-checklist-matrix
+      [section]="section"
+      [values]="effectiveValues()"
+      (valueChange)="
+        setMatrixValue($event)
+      "
+    />
+  </div>
+} @else if (
+  section.view === 'action-plan'
+) {
+  <div class="sm:ml-[52px]">
+    <app-action-plan
+      [section]="section"
+      [value]="
+        actionPlanValue(section.id)
+      "
+      [previewMode]="previewMode()"
+      (valueChange)="
+        setActionPlanValue(
+          section,
+          $event
+        )
+      "
+    />
+  </div>} @else {
+        <div
+          class="grid grid-cols-1 gap-5 sm:ml-[52px] xl:grid-cols-2"
+        >
+          @for (
+            field of section.fields;
+            track field.key
+          ) {
+            <div
+              class="min-w-0"
+              [class.xl:col-span-2]="
+                (
+                  field.layout ??
+                  'full'
+                ) === 'full'
+              "
+              [class.xl:col-span-1]="
+                field.layout === 'half'
+              "
+            >
+              <app-checklist-field
+                [field]="field"
+                [value]="
+                  fieldValue(field.key)
+                "
+                (valueChange)="
+                  setValue(
+                    field,
+                    $event
+                  )
+                "
+              />
+
+              @if (
+                shouldShowObservation(
+                  field
+                )
+              ) {
+                <div
+                  class="mt-3 rounded-2xl border border-amber-900/60 bg-amber-950/20 p-4"
+                >
+                  <div
+                    class="flex items-center justify-between gap-3"
+                  >
+                    <label
+                      [for]="
+                        field.key +
+                        '-observation'
+                      "
+                      class="text-sm font-semibold text-amber-200"
+                    >
+                      {{
+                        field.observation
+                          ?.label ||
+                        'Observaciones'
+                      }}
+
+                      @if (
+                        field.observation
+                          ?.required
+                      ) {
+                        <span
+                          class="text-red-400"
+                          aria-hidden="true"
+                        >
+                          *
+                        </span>
+                      }
+                    </label>
+
+                    @if (
+                      field.observation
+                        ?.required
+                    ) {
+                      <span
+                        class="rounded-full border border-amber-800/70 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-300"
+                      >
+                        Requerida
+                      </span>
+                    }
+                  </div>
+
+                  @if (
+                    field.type ===
+                    'select'
+                  ) {
+                    <p
+                      class="mt-1 text-xs text-zinc-500"
+                    >
+                      Visible para la respuesta:
+
+                      <span
+                        class="font-semibold text-amber-300"
+                      >
+                        {{
+                          field.observation
+                            ?.triggerValue
+                        }}
+                      </span>
+                    </p>
+                  }
+
+                  <textarea
+                    [id]="
+                      field.key +
+                      '-observation'
+                    "
+                    [name]="
+                      field.key +
+                      '-observation'
+                    "
+                    rows="3"
+                    [required]="
+                      field.observation
+                        ?.required === true
+                    "
+                    [attr.aria-required]="
+                      field.observation
+                        ?.required === true
+                    "
+                    [placeholder]="
+                      field.observation
+                        ?.placeholder ||
+                      'Captura la observación'
+                    "
+                    [ngModel]="
+                      observationValue(
+                        field.key
+                      )
+                    "
+                    (ngModelChange)="
+                      setObservation(
+                        field.key,
+                        $event
+                      )
+                    "
+                    class="mt-3 min-h-24 w-full resize-y rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm leading-6 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
+                  ></textarea>
+                </div>
+              }
+            </div>
+          } @empty {
+            <p
+              class="text-sm text-zinc-500 xl:col-span-2"
+            >
+              Esta sección no contiene campos.
+            </p>
+          }
+        </div>
+      }
+    </section>
+  }
+</main>
+  </div>
+
+  @if (showFooter() && !previewMode() ) {
+    <footer class=" sticky bottom-0 z-40 border-t border-zinc-800/90 bg-zinc-950/95 px-4 py-3 shadow-[0_-12px_35px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:px-6 lg:px-8">
+      <div class="mx-auto flex max-w-[1800px] items-center gap-4">
+        <div class="hidden min-w-0 flex-1 md:block">
+          <p class="text-xs text-zinc-500">
+            Progreso general: {{ answeredCount() }}/{{ itemCount() }}
+          </p>
+        </div>
+
+       <div
+  class="
+    ml-auto
+    flex
+    w-full
+    flex-wrap
+    items-center
+    justify-end
+    gap-2
+    sm:w-auto
+  "
+>
+  @if (!previewMode()) {
+
+    <app-button
+      variant="ghost"
+      [icon]="FilePenLine"
+      ariaLabel="Editar plantilla"
+      (pressed)="goToEditTemplate()"
+    >
+      Editar Template
+    </app-button>
+
+    <app-button
+      variant="secondary"
+      [icon]="ClipboardSave"
+      [loading]="saving()"
+      loadingText="Guardando..."
+      (pressed)="requestSave('DRAFT')"
+    >
+      Guardar borrador
+    </app-button>
+
+    <app-button
+      variant="primary"
+      [icon]="CheckCircle2"
+      [loading]="saving()"
+      loadingText="Guardando..."
+      (pressed)="requestSave('COMPLETE')"
+    >
+      Completar checklist
+    </app-button>
+
+  }
+</div>
+      </div>
+    </footer>
+  }
+</div>

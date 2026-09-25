@@ -1,0 +1,196 @@
+<div
+  class="flex max-h-[92vh] w-[min(1180px,95vw)] flex-col overflow-hidden rounded-3xl border border-zinc-700 bg-zinc-950 text-zinc-100 shadow-2xl shadow-black/60"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="import-dialog-title"
+>
+  <header class="flex items-start justify-between gap-4 border-b border-zinc-800 bg-gradient-to-r from-zinc-950 via-zinc-950 to-blue-950/30 px-6 py-5">
+    <div class="flex min-w-0 items-start gap-4">
+      <span class="grid size-12 shrink-0 place-items-center rounded-2xl border border-blue-500/20 bg-blue-500/10 text-blue-300 shadow-lg shadow-blue-950/20" aria-hidden="true">
+        <lucide-icon [img]="Sparkles" [size]="23" [strokeWidth]="1.9" />
+      </span>
+
+      <div class="min-w-0">
+        <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-blue-400">Plantillas inteligentes</p>
+        <h2 id="import-dialog-title" class="mt-1 text-xl font-semibold tracking-tight text-white">Crear o importar plantilla</h2>
+        <p class="mt-1 text-sm text-zinc-500">Usa IA para diseñarla sin programar, o importa un JSON existente.</p>
+      </div>
+    </div>
+
+    <button type="button" aria-label="Cerrar diálogo" class="grid size-10 shrink-0 place-items-center rounded-xl border border-zinc-800 text-zinc-400 transition hover:bg-zinc-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" (click)="cancel()">
+      <lucide-icon [img]="X" [size]="18" />
+    </button>
+  </header>
+
+  <nav class="flex border-b border-zinc-800 bg-zinc-950 px-6" aria-label="Opciones de creación">
+    <button type="button" class="flex items-center gap-2 border-b-2 px-4 py-3.5 text-sm font-medium transition" [class.border-blue-500]="activeTab() === 'ai'" [class.text-blue-300]="activeTab() === 'ai'" [class.border-transparent]="activeTab() !== 'ai'" [class.text-zinc-500]="activeTab() !== 'ai'" (click)="setActiveTab('ai')">
+      <lucide-icon [img]="Bot" [size]="17" />
+      Crear con IA
+    </button>
+
+    <button type="button" class="flex items-center gap-2 border-b-2 px-4 py-3.5 text-sm font-medium transition" [class.border-blue-500]="activeTab() === 'import'" [class.text-blue-300]="activeTab() === 'import'" [class.border-transparent]="activeTab() !== 'import'" [class.text-zinc-500]="activeTab() !== 'import'" (click)="setActiveTab('import')">
+      <lucide-icon [img]="FileJson2" [size]="17" />
+      Importar JSON
+    </button>
+  </nav>
+
+  <main class="min-h-0 flex-1 overflow-y-auto p-6">
+    @if (activeTab() === 'ai') {
+      <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <section class="space-y-5">
+          <div class="rounded-3xl border border-blue-900/50 bg-gradient-to-br from-blue-950/30 via-zinc-900 to-violet-950/20 p-6">
+            <div class="flex items-start gap-4">
+              <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-violet-500/10 text-violet-300" aria-hidden="true">
+                <lucide-icon [img]="WandSparkles" [size]="21" />
+              </span>
+              <div>
+                <h3 class="font-semibold text-white">¿Qué quieres crear?</h3>
+                <p class="mt-1 text-sm leading-6 text-zinc-400">Describe el proceso, las preguntas, las opciones y cualquier cálculo. No necesitas conocer la estructura JSON.</p>
+              </div>
+            </div>
+
+            <label class="mt-5 block text-xs font-medium text-zinc-400">
+              Describe la plantilla
+              <textarea rows="8" [ngModel]="aiRequest()" (ngModelChange)="aiRequest.set($event)" placeholder="Ejemplo: Quiero una auditoría de seguridad por área. Primero debe pedir empleado, turno y mes. Después necesito una matriz con 20 puntos que se respondan SI, NO o N/A. Calcula el porcentaje de respuestas SI." class="mt-2 min-h-52 w-full resize-y rounded-2xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm leading-6 text-zinc-200 outline-none placeholder:text-zinc-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"></textarea>
+            </label>
+          </div>
+
+          <section class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <h3 class="text-sm font-semibold text-zinc-100">Preferencias</h3>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              @for (option of [{ value: 'form', label: 'Formulario', description: 'Campos individuales' }, { value: 'matrix', label: 'Matriz', description: 'Filas, opciones y referencias' }, { value: 'mixed', label: 'Mixta', description: 'Combina ambos' }, { value: 'action-plan', label: 'Plan de acción', description: 'Migra filas de Excel ya llenas' }]; track option.value) {
+                <label class="cursor-pointer rounded-2xl border p-4 transition" [class.border-blue-500]="aiMode() === option.value" [class.bg-blue-500/10]="aiMode() === option.value" [class.border-zinc-800]="aiMode() !== option.value" [class.bg-zinc-950]="aiMode() !== option.value">
+                  <input type="radio" class="sr-only" name="aiMode" [value]="option.value" [ngModel]="aiMode()" (ngModelChange)="aiMode.set($event)" />
+                  <span class="block text-sm font-semibold" [class.text-blue-300]="aiMode() === option.value" [class.text-zinc-200]="aiMode() !== option.value">{{ option.label }}</span>
+                  <span class="mt-1 block text-xs text-zinc-600">{{ option.description }}</span>
+                </label>
+              }
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+              <label class="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-xs text-zinc-400">
+                <input type="checkbox" class="size-4 accent-blue-600" [ngModel]="includeRules()" (ngModelChange)="includeRules.set($event)" />
+                Permitir cálculos y calificaciones
+              </label>
+              <label class="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-xs text-zinc-400">
+                <input type="checkbox" class="size-4 accent-blue-600" [ngModel]="includeObservations()" (ngModelChange)="includeObservations.set($event)" />
+                Permitir observaciones automáticas
+              </label>
+            </div>
+          </section>
+
+          <button type="button" class="flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-4 text-sm font-semibold text-white shadow-xl shadow-blue-950/30 transition hover:from-blue-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-40" [disabled]="!aiRequest().trim()" (click)="generateAiPrompt()">
+            <lucide-icon [img]="copiedPrompt() ? Check : Clipboard" [size]="19" />
+            {{ copiedPrompt() ? 'Prompt copiado al portapapeles' : 'Generar prompt para IA' }}
+          </button>
+        </section>
+
+        <aside class="h-fit space-y-4 lg:sticky lg:top-0">
+          <section class="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 place-items-center rounded-xl bg-amber-500/10 text-amber-300"><lucide-icon [img]="Lightbulb" [size]="18" /></span>
+              <h3 class="text-sm font-semibold text-zinc-100">Cómo usarlo</h3>
+            </div>
+            <ol class="mt-4 space-y-3 text-xs leading-5 text-zinc-400">
+              <li class="flex gap-3"><span class="grid size-6 shrink-0 place-items-center rounded-full bg-blue-500/10 font-semibold text-blue-300">1</span><span>Describe el checklist con tus propias palabras.</span></li>
+              <li class="flex gap-3"><span class="grid size-6 shrink-0 place-items-center rounded-full bg-blue-500/10 font-semibold text-blue-300">2</span><span>Genera el prompt y pégalo en la IA de tu preferencia.</span></li>
+              <li class="flex gap-3"><span class="grid size-6 shrink-0 place-items-center rounded-full bg-blue-500/10 font-semibold text-blue-300">3</span><span>Copia el JSON generado y pégalo en Importar JSON.</span></li>
+              <li class="flex gap-3"><span class="grid size-6 shrink-0 place-items-center rounded-full bg-blue-500/10 font-semibold text-blue-300">4</span><span>El verificador te dirá exactamente qué corregir.</span></li>
+            </ol>
+          </section>
+
+          <section class="rounded-2xl border border-zinc-800 bg-zinc-950 p-5">
+            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-600">Controles disponibles</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              @for (type of ['text', 'textarea', 'number', 'date', 'checkbox', 'select', 'dropdown', 'month']; track type) {
+                <code class="rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-[11px] text-blue-300">{{ type }}</code>
+              }
+            </div>
+            <p class="mt-4 text-xs leading-5 text-zinc-600">La IA puede migrar todas las preguntas, referencias y planes de acción llenos desde fotos de Excel.</p>
+          </section>
+        </aside>
+      </div>
+    } @else {
+      <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <section>
+          <input #fileInput type="file" accept=".json,application/json" class="hidden" (change)="handleFileInput($event)" />
+
+          <div class="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-6 text-center transition" [class.border-blue-500]="dragging()" [class.bg-blue-950/30]="dragging()" [class.border-zinc-700]="!dragging()" [class.bg-zinc-900/50]="!dragging()" role="button" tabindex="0" aria-label="Arrastrar o seleccionar archivo JSON" (click)="openFilePicker(fileInput)" (keydown.enter)="openFilePicker(fileInput)" (keydown.space)="openFilePicker(fileInput)" (dragover)="handleDragOver($event)" (dragleave)="handleDragLeave($event)" (drop)="handleDrop($event)">
+            <span class="grid size-11 place-items-center rounded-2xl bg-blue-500/10 text-blue-300"><lucide-icon [img]="Upload" [size]="21" /></span>
+            <h3 class="mt-3 text-sm font-semibold text-zinc-200">Arrastra un JSON o pulsa para seleccionarlo</h3>
+            @if (selectedFileName()) {
+              <span class="mt-3 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-300">{{ selectedFileName() }}</span>
+            }
+          </div>
+
+          <div class="mt-5 overflow-hidden rounded-2xl border border-zinc-800">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800 bg-zinc-900 px-4 py-3">
+              <div>
+                <h3 class="text-sm font-semibold text-zinc-200">Contenido JSON</h3>
+                <p class="mt-0.5 text-xs text-zinc-500">Pega aquí la respuesta entregada por la IA.</p>
+              </div>
+              <div class="flex gap-2">
+                <button type="button" class="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 transition hover:bg-zinc-800 hover:text-white" (click)="formatJson()">Formatear</button>
+                <button type="button" class="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 transition hover:bg-zinc-800 hover:text-white" (click)="clearJson()">Limpiar</button>
+              </div>
+            </div>
+            <textarea name="templateJson" spellcheck="false" autocomplete="off" class="block h-[430px] w-full resize-y border-0 bg-zinc-950 p-4 font-mono text-xs leading-5 text-zinc-300 outline-none" placeholder="Pega aquí el JSON generado por IA" [ngModel]="jsonText()" (ngModelChange)="updateJson($event)"></textarea>
+          </div>
+        </section>
+
+        <aside class="h-fit rounded-2xl border border-zinc-800 bg-zinc-900 p-5 lg:sticky lg:top-0">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="font-semibold text-zinc-100">Verificación guiada</h3>
+            <span class="rounded-full px-2.5 py-1 text-xs font-medium" [class.bg-emerald-500/10]="validation().valid" [class.text-emerald-300]="validation().valid" [class.bg-red-500/10]="!validation().valid" [class.text-red-300]="!validation().valid">{{ validation().valid ? 'Lista para importar' : 'Requiere revisión' }}</span>
+          </div>
+
+          @if (validation().valid && validation().template; as template) {
+            <div class="mt-5 space-y-3">
+              <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+                <p class="text-xs text-zinc-500">Plantilla</p>
+                <p class="mt-1 font-medium text-zinc-100">{{ template.name }}</p>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-center"><p class="text-xl font-semibold text-blue-300">{{ template.definition.sections.length }}</p><p class="mt-1 text-[10px] text-zinc-600">Secciones</p></div>
+                <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-center"><p class="text-xl font-semibold text-violet-300">{{ matrixCount() }}</p><p class="mt-1 text-[10px] text-zinc-600">Matrices</p></div>
+                <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-center"><p class="text-xl font-semibold text-emerald-300">{{ totalItems() }}</p><p class="mt-1 text-[10px] text-zinc-600">Elementos</p></div>
+                <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-center"><p class="text-xl font-semibold text-amber-300">{{ actionPlanCount() }}</p><p class="mt-1 text-[10px] text-zinc-600">Planes</p></div>
+              </div>
+              <div class="rounded-xl border border-emerald-900/70 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-300">La configuración es compatible con el editor y el runner.</div>
+            </div>
+          } @else {
+            <div class="mt-5 space-y-3">
+              @for (issue of validation().issues; track issue.id) {
+                <article class="rounded-xl border border-red-900/60 bg-red-950/20 p-3">
+                  <p class="text-[10px] font-bold uppercase tracking-wider text-red-400">{{ issue.location }}</p>
+                  <p class="mt-1 text-xs leading-5 text-red-200">{{ issue.problem }}</p>
+                  <div class="mt-2 rounded-lg bg-zinc-950/70 px-3 py-2">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">Cómo corregirlo</p>
+                    <p class="mt-1 text-xs leading-5 text-zinc-400">{{ issue.solution }}</p>
+                  </div>
+                </article>
+              }
+
+              @if (jsonText().trim() && validation().issues.length > 0) {
+                <button type="button" class="flex w-full items-center justify-center gap-2 rounded-xl border border-violet-800 bg-violet-950/20 px-4 py-3 text-xs font-semibold text-violet-300 transition hover:bg-violet-950/40" (click)="copyDebugPrompt()">
+                  <lucide-icon [img]="copiedDebugPrompt() ? Check : Bot" [size]="16" />
+                  {{ copiedDebugPrompt() ? 'Prompt de corrección copiado' : 'Pedir a IA que corrija los errores' }}
+                </button>
+              }
+            </div>
+          }
+
+          <button type="button" class="mt-5 w-full rounded-xl border border-zinc-700 px-4 py-2.5 text-sm text-zinc-300 transition hover:border-blue-500 hover:bg-blue-950/30 hover:text-blue-300" (click)="useExample()">Cargar ejemplo completo</button>
+        </aside>
+      </div>
+    }
+  </main>
+
+  <footer class="flex flex-wrap items-center justify-between gap-4 border-t border-zinc-800 bg-zinc-900 px-6 py-4">
+    <p class="text-xs text-zinc-500">El JSON se valida localmente antes de importarlo.</p>
+    <div class="flex items-center gap-2">
+      <button type="button" class="rounded-xl border border-zinc-700 px-4 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-800" (click)="cancel()">Cancelar</button>
+      <button type="button" class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40" [disabled]="!validation().valid" (click)="importTemplate()">Importar plantilla</button>
+    </div>
+  </footer>
+</div>

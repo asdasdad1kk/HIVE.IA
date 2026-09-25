@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS ChecklistTemplate (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name TEXT NOT NULL,
+  Description TEXT NULL,
+  DefinitionJson TEXT NOT NULL,
+  Version INTEGER NOT NULL DEFAULT 1,
+  IsActive INTEGER NOT NULL DEFAULT 1,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CHECK (json_valid(DefinitionJson))
+);
+
+CREATE TABLE IF NOT EXISTS ChecklistSubmission (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  TemplateId INTEGER NOT NULL,
+  Status TEXT NOT NULL DEFAULT 'DRAFT',
+  SubmittedBy TEXT NULL,
+  DataJson TEXT NOT NULL,
+  CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UpdatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (TemplateId) REFERENCES ChecklistTemplate(Id),
+  CHECK (Status IN ('DRAFT', 'COMPLETE', 'CANCELLED')),
+  CHECK (json_valid(DataJson))
+);
+
+CREATE INDEX IF NOT EXISTS IX_ChecklistSubmission_TemplateId
+ON ChecklistSubmission (TemplateId);
+
+CREATE INDEX IF NOT EXISTS IX_ChecklistSubmission_Status
+ON ChecklistSubmission (Status);

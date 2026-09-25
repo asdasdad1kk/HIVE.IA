@@ -1,0 +1,332 @@
+<div
+  class="
+    overflow-hidden
+    rounded-3xl
+    border border-zinc-800
+    bg-zinc-950
+  "
+>
+
+  <div
+    class="
+      overflow-x-auto
+    "
+  >
+
+    <table
+      class="
+        min-w-full
+        border-collapse
+      "
+    >
+
+      <thead>
+
+        <tr
+          class="
+            border-b
+            border-zinc-800
+            bg-zinc-900
+          "
+        >
+
+          <th
+            class="
+              sticky
+              left-0
+              z-10
+              min-w-72
+              border-r
+              border-zinc-800
+              bg-zinc-900
+              px-4 py-3
+              text-left
+              text-xs
+              font-semibold
+              uppercase
+              tracking-wider
+              text-zinc-400
+            "
+          >
+            Ítem
+          </th>
+
+          @for (
+            column of section().columns;
+            track column
+          ) {
+
+            <th
+              class="
+                min-w-28
+                px-4 py-3
+                text-center
+                text-xs
+                font-semibold
+                uppercase
+                tracking-wider
+                text-zinc-400
+              "
+            >
+              {{ column }}
+            </th>
+
+          }
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        @for (
+          row of section().rows;
+          track row.key
+        ) {
+
+          <tr
+            class="
+              border-b
+              border-zinc-800
+            "
+          >
+
+            <td
+  class="
+    sticky
+    left-0
+    z-[1]
+    border-r
+    border-zinc-800
+    bg-zinc-950
+    px-4 py-3
+    transition-colors
+    group-hover:bg-zinc-900
+  "
+>
+  <div
+    class="
+      flex
+      items-center
+      gap-3
+    "
+  >
+    <span
+      class="
+        grid size-7
+        shrink-0
+        place-items-center
+        rounded-lg
+        border border-zinc-800
+        bg-zinc-900
+        text-[10px]
+        font-semibold
+        text-zinc-500
+      "
+      aria-hidden="true"
+    >
+      {{ $index + 1 }}
+    </span>
+
+    <div
+      class="
+        min-w-0
+        flex-1
+      "
+    >
+      <span
+        class="
+          block
+          text-sm
+          font-medium
+          text-zinc-100
+        "
+      >
+        {{ row.label }}
+      </span>
+
+      @if (row.required) {
+        <span
+          class="
+            mt-1
+            inline-flex
+            rounded-full
+            border border-amber-800/60
+            bg-amber-500/10
+            px-2 py-0.5
+            text-[9px]
+            font-semibold
+            uppercase
+            tracking-wider
+            text-amber-300
+          "
+        >
+          Requerido
+        </span>
+      }
+    </div>
+
+    @if (row.legend) {
+      <button
+        type="button"
+        class="
+          grid size-8
+          shrink-0
+          place-items-center
+          rounded-lg
+          border border-zinc-800
+          bg-zinc-900
+          text-zinc-500
+          outline-none
+          transition
+          hover:border-blue-500/50
+          hover:bg-blue-500/10
+          hover:text-blue-300
+          focus-visible:ring-2
+          focus-visible:ring-blue-500
+        "
+        [appTooltip]="row.legend"
+        appTooltipPosition="top"
+        [attr.aria-label]="
+          'Información sobre ' +
+          row.label
+        "
+      >
+        <lucide-icon
+          [img]="Info"
+          [size]="15"
+          [strokeWidth]="2"
+          aria-hidden="true"
+        />
+      </button>
+    }
+  </div>
+</td>
+            @for (
+              column of section().columns;
+              track column
+            ) {
+
+            <td class="p-2 text-center">
+  <label
+    class="
+      group
+      relative
+      flex min-h-12
+      w-full
+      cursor-pointer
+      items-center
+      justify-center
+      rounded-xl
+      border
+      border-transparent
+      transition
+      duration-200
+      hover:border-zinc-700
+      hover:bg-zinc-900
+      focus-within:ring-2
+      focus-within:ring-blue-500
+      focus-within:ring-offset-2
+      focus-within:ring-offset-zinc-950
+    "
+    [class.border-blue-500]="
+      selectedValue(row.key) === column
+    "
+    [class.bg-blue-500/10]="
+      selectedValue(row.key) === column
+    "
+    [class.shadow-[0_0_18px_rgba(59,130,246,0.12)]]="
+      selectedValue(row.key) === column
+    "
+  >
+    <input
+      type="radio"
+      class="sr-only"
+      [id]="
+        row.key +
+        '-' +
+        column
+      "
+      [name]="row.key"
+      [value]="column"
+      [checked]="
+        selectedValue(row.key) === column
+      "
+      [attr.aria-label]="
+        row.label +
+        ': ' +
+        column
+      "
+      (change)="
+        changeValue(
+          row.key,
+          column
+        )
+      "
+    />
+
+    <span
+      class="
+        relative
+        grid size-6
+        place-items-center
+        rounded-full
+        border-2
+        bg-zinc-950
+        transition
+        duration-200
+        group-hover:scale-110
+      "
+      [class.scale-110]="
+        selectedValue(row.key) === column
+      "
+      [class.border-blue-400]="
+        selectedValue(row.key) === column
+      "
+      [class.border-zinc-600]="
+        selectedValue(row.key) !== column
+      "
+      [class.bg-blue-500/15]="
+        selectedValue(row.key) === column
+      "
+      aria-hidden="true"
+    >
+      <span
+        class="
+          size-2.5
+          rounded-full
+          bg-blue-400
+          shadow-[0_0_10px_rgba(96,165,250,0.8)]
+          transition
+          duration-200
+        "
+        [class.scale-100]="
+          selectedValue(row.key) === column
+        "
+        [class.opacity-100]="
+          selectedValue(row.key) === column
+        "
+        [class.scale-0]="
+          selectedValue(row.key) !== column
+        "
+        [class.opacity-0]="
+          selectedValue(row.key) !== column
+        "
+      ></span>
+    </span>
+  </label>
+</td>
+
+            }
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

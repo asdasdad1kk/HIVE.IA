@@ -1,0 +1,64 @@
+@if (loading()) {
+  <div class="grid min-h-[60vh] place-items-center px-6">
+    <div class="text-center">
+      <div
+        class="mx-auto size-10 animate-spin rounded-full border-2 border-zinc-700 border-t-blue-500"
+        aria-hidden="true"
+      ></div>
+
+      <p class="mt-4 text-sm text-zinc-500">
+        Preparando formulario...
+      </p>
+    </div>
+  </div>
+} @else if (template(); as currentTemplate) {
+  <div class="-m-5 min-h-screen bg-zinc-950 md:-m-7 xl:-m-8">
+    @if (errorMessage()) {
+      <div class="mx-auto max-w-[1800px] px-4 pt-5 sm:px-6 lg:px-8">
+        <div
+          role="alert"
+          aria-live="assertive"
+          class="border-l-2 border-red-500 bg-red-950/30 px-4 py-3 text-sm text-red-200"
+        >
+          {{ errorMessage() }}
+        </div>
+      </div>
+    }
+
+   <app-checklist-shell
+  [templateName]="currentTemplate.name"
+  [templateDescription]="
+    currentTemplate.description ?? ''
+  "
+  [definition]="definition()"
+  [values]="values()"
+  [saving]="saving()"
+  [previewMode]="false"
+  [showFooter]="true"
+  [showNavigation]="true"
+  (valueChange)="setValue($event)"
+  (matrixValueChange)="
+    setMatrixValue($event)
+  "
+  (observationChange)="
+    setObservation($event)
+  "
+  (actionPlanValueChange)="
+    setActionPlanValue($event)
+  "
+  (saveRequested)="save($event)"
+  (editTemplateRequested)="editTemplate()"
+
+/>
+
+  </div>
+} @else {
+  <div class="grid min-h-[60vh] place-items-center px-6">
+    <div
+      role="alert"
+      class="max-w-lg rounded-2xl border border-red-900 bg-red-950/30 p-5 text-sm text-red-200"
+    >
+      {{ errorMessage() || 'No se pudo cargar la plantilla.' }}
+    </div>
+  </div>
+}

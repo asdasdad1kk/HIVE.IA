@@ -1,0 +1,83 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --configuration production --base-href ./",
+    "dist": "npm run build && electron-builder",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "desktop": "concurrently -k \"ng serve --port 4200\" \"wait-on http://localhost:4200 && cross-env ELECTRON_START_URL=http://localhost:4200 electron .\""
+  },
+  "build": {
+    "appId": "com.hiveai.checkliststudio",
+    "productName": "HIVE AI Checklist Studio",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/G.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@11.6.2",
+  "dependencies": {
+    "@angular/cdk": "^21.2.14",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@prisma/client": "^6.16.2",
+    "apexcharts": "^7.4.0",
+    "cross-env": "^10.1.0",
+    "lucide-angular": "^1.0.0",
+    "ng-apexcharts": "^3.1.0",
+    "nodemailer": "^10.0.10",
+    "rxjs": "~7.8.0",
+    "sqlite3": "^6.0.1",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/compiler-cli": "^21.1.0",
+    "@tailwindcss/postcss": "^4.1.12",
+    "concurrently": "^10.0.5",
+    "electron": "^44.4.0",
+    "electron-builder": "^26.15.3",
+    "jsdom": "^27.1.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.12",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8",
+    "wait-on": "^9.1.0"
+  }
+}

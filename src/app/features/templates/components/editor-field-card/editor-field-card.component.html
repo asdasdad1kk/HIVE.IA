@@ -1,0 +1,528 @@
+<article
+  class="
+    group
+    rounded-2xl
+    border border-zinc-800
+    bg-zinc-950
+    p-4
+    transition
+    hover:border-zinc-700
+  "
+>
+  <div class="flex items-center gap-3">
+<button
+  type="button"
+  cdkDragHandle
+  class="grid size-9 shrink-0 cursor-grab place-items-center rounded-lg bg-zinc-800 text-zinc-400 outline-none transition hover:bg-zinc-700 hover:text-zinc-200 focus-visible:ring-2 focus-visible:ring-blue-500 active:cursor-grabbing"
+  [attr.aria-label]="
+    'Mover pregunta ' + (index() + 1)
+  "
+  title="Arrastrar pregunta"
+>
+  <span class="text-xs font-semibold">
+    {{ index() + 1 }}
+  </span>
+</button>
+
+    <input
+      aria-label="Etiqueta"
+      [ngModel]="field().label"
+      (ngModelChange)="update({ label: $event })"
+      class="
+        h-11
+        min-w-0
+        flex-1
+        rounded-xl
+        border border-zinc-700
+        bg-zinc-900
+        px-3
+        text-sm
+        font-semibold
+        text-zinc-100
+        outline-none
+        focus:border-blue-500
+      "
+    />
+
+    <button
+      type="button"
+      aria-label="Eliminar campo"
+      (click)="removed.emit()"
+      class="
+        grid size-10
+        place-items-center
+        rounded-xl
+        border border-red-900/70
+        text-red-400
+        transition
+        hover:bg-red-950/50
+      "
+    >
+      ×
+    </button>
+  </div>
+
+  <div class="mt-4 grid gap-3 md:grid-cols-2">
+    <label
+      class="text-xs font-medium text-zinc-500"
+    >
+      Tipo
+
+      <select
+        [ngModel]="field().type"
+        (ngModelChange)="changeType($event)"
+        class="
+          mt-1.5
+          h-11
+          w-full
+          rounded-xl
+          border border-zinc-700
+          bg-zinc-900
+          px-3
+          text-sm
+          text-zinc-200
+          outline-none
+          focus:border-blue-500
+        "
+      >
+        <option value="text">
+          Texto
+        </option>
+
+        <option value="textarea">
+          Área de texto
+        </option>
+
+        <option value="number">
+          Número
+        </option>
+
+        <option value="date">
+          Fecha
+        </option>
+
+        <option value="checkbox">
+          Confirmación
+        </option>
+
+        <option value="select">
+          Lista
+        </option>
+        <option value="dropdown">
+          Dropdown
+        </option>
+
+        <option value="month">
+          Mes
+        </option>
+      </select>
+    </label>
+<label
+  class="text-xs font-medium text-zinc-500"
+>
+  Ancho del campo
+
+  <div
+    class="mt-1.5 grid h-11 grid-cols-2 rounded-xl border border-zinc-700 bg-zinc-900 p-1"
+  >
+    <button
+      type="button"
+      class="rounded-lg px-3 text-xs font-medium transition"
+      [class.bg-blue-600]="
+        field().layout === 'half'
+      "
+      [class.text-white]="
+        field().layout === 'half'
+      "
+      [class.text-zinc-500]="
+        field().layout !== 'half'
+      "
+      [class.hover:bg-zinc-800]="
+        field().layout !== 'half'
+      "
+      (click)="changeLayout('half')"
+    >
+      Media columna
+    </button>
+
+    <button
+      type="button"
+      class="rounded-lg px-3 text-xs font-medium transition"
+      [class.bg-blue-600]="
+        (field().layout ?? 'full') === 'full'
+      "
+      [class.text-white]="
+        (field().layout ?? 'full') === 'full'
+      "
+      [class.text-zinc-500]="
+        (field().layout ?? 'full') !== 'full'
+      "
+      [class.hover:bg-zinc-800]="
+        (field().layout ?? 'full') !== 'full'
+      "
+      (click)="changeLayout('full')"
+    >
+      Fila completa
+    </button>
+  </div>
+</label>
+    <label
+      class="text-xs font-medium text-zinc-500"
+    >
+      Texto de ayuda
+
+      <input
+        [ngModel]="field().placeholder ?? ''"
+        (ngModelChange)="
+          update({
+            placeholder: $event || undefined
+          })
+        "
+        class="
+          mt-1.5
+          h-11
+          w-full
+          rounded-xl
+          border border-zinc-700
+          bg-zinc-900
+          px-3
+          text-sm
+          text-zinc-200
+          outline-none
+          focus:border-blue-500
+        "
+      />
+    </label>
+  </div>
+
+  @if (field().type === 'select') {
+    <label
+      class="
+        mt-3
+        block
+        text-xs
+        font-medium
+        text-zinc-500
+      "
+    >
+      Opciones separadas por coma
+
+      <input
+        [ngModel]="
+          field().options?.join(', ') ?? ''
+        "
+        (ngModelChange)="changeOptions($event)"
+        class="
+          mt-1.5
+          h-11
+          w-full
+          rounded-xl
+          border border-zinc-700
+          bg-zinc-900
+          px-3
+          text-sm
+          text-zinc-200
+          outline-none
+          focus:border-blue-500
+        "
+      />
+    </label>
+  }
+@if (
+  field().type === 'dropdown'
+) {
+
+  <label
+    class="
+      mt-3
+      block
+      text-xs
+      font-medium
+      text-zinc-500
+    "
+  >
+
+    Opciones
+    <span
+      class="text-zinc-600"
+    >
+      (pega una columna completa de Excel)
+    </span>
+
+    <textarea
+      rows="8"
+      [ngModel]="
+        field().options?.join('\n') ??
+        ''
+      "
+      (ngModelChange)="
+        changeDropdownOptions(
+          $event
+        )
+      "
+      placeholder="Mexicali&#10;Dallas&#10;Savannah&#10;Appleton"
+      class="
+        mt-1.5
+        w-full
+        rounded-xl
+        border
+        border-zinc-700
+        bg-zinc-900
+        px-3
+        py-3
+        text-sm
+        text-zinc-200
+        outline-none
+        focus:border-blue-500
+      "
+    >
+    </textarea>
+
+  </label>
+
+}
+  <div
+    class="
+      mt-4
+      flex
+      flex-wrap
+      gap-3
+    "
+  >
+    <label
+      class="
+        flex
+        items-center
+        gap-3
+        rounded-xl
+        border border-zinc-800
+        bg-zinc-900
+        px-3
+        py-2
+        text-xs
+        text-zinc-400
+      "
+    >
+      <input
+        type="checkbox"
+        [ngModel]="field().required"
+        (ngModelChange)="
+          update({
+            required: $event
+          })
+        "
+        class="size-4 accent-blue-600"
+      />
+
+      Campo requerido
+    </label>
+
+    <label
+      class="
+        flex
+        items-center
+        gap-3
+        rounded-xl
+        border border-zinc-800
+        bg-zinc-900
+        px-3
+        py-2
+        text-xs
+        text-zinc-400
+      "
+    >
+      <input
+        type="checkbox"
+        [ngModel]="
+          field().observation?.enabled === true
+        "
+        (ngModelChange)="
+          toggleObservation($event)
+        "
+        class="size-4 accent-blue-600"
+      />
+
+      Observaciones automáticas
+    </label>
+  </div>
+
+  @if (
+  field().observation?.enabled &&
+  field().type !== 'month'
+) {
+    <section
+      class="
+        mt-4
+        rounded-2xl
+        border border-blue-900/60
+        bg-blue-950/20
+        p-4
+      "
+    >
+      <div class="mb-4">
+        <p
+          class="
+            text-xs
+            font-semibold
+            uppercase
+            tracking-[0.16em]
+            text-blue-400
+          "
+        >
+          Configuración de observaciones
+        </p>
+      </div>
+
+      @if (field().type === 'select') {
+        <label
+          class="
+            block
+            text-xs
+            font-medium
+            text-zinc-500
+          "
+        >
+          Mostrar observación cuando respuesta sea
+
+          <select
+            [ngModel]="
+              field().observation?.triggerValue ?? ''
+            "
+            (ngModelChange)="
+              updateObservation({
+                triggerValue: $event
+              })
+            "
+            class="
+              mt-1.5
+              h-11
+              w-full
+              rounded-xl
+              border border-zinc-700
+              bg-zinc-900
+              px-3
+              text-sm
+              text-zinc-200
+            "
+          >
+            @for (
+              option of field().options ?? [];
+              track option
+            ) {
+              <option [value]="option">
+                {{ option }}
+              </option>
+            }
+          </select>
+        </label>
+      }
+
+      <div
+        class="
+          mt-3
+          grid
+          gap-3
+          md:grid-cols-2
+        "
+      >
+        <label
+          class="
+            text-xs
+            font-medium
+            text-zinc-500
+          "
+        >
+          Etiqueta
+
+          <input
+            [ngModel]="
+              field().observation?.label ??
+              'Observaciones'
+            "
+            (ngModelChange)="
+              updateObservation({
+                label: $event
+              })
+            "
+            class="
+              mt-1.5
+              h-11
+              w-full
+              rounded-xl
+              border border-zinc-700
+              bg-zinc-900
+              px-3
+              text-sm
+              text-zinc-200
+            "
+          />
+        </label>
+
+        <label
+          class="
+            text-xs
+            font-medium
+            text-zinc-500
+          "
+        >
+          Placeholder
+
+          <input
+            [ngModel]="
+              field().observation?.placeholder ??
+              ''
+            "
+            (ngModelChange)="
+              updateObservation({
+                placeholder:
+                  $event || undefined
+              })
+            "
+            class="
+              mt-1.5
+              h-11
+              w-full
+              rounded-xl
+              border border-zinc-700
+              bg-zinc-900
+              px-3
+              text-sm
+              text-zinc-200
+            "
+          />
+        </label>
+      </div>
+
+      <label
+        class="
+          mt-3
+          flex
+          items-center
+          gap-3
+          rounded-xl
+          border border-zinc-800
+          bg-zinc-900
+          px-3
+          py-2
+          text-xs
+          text-zinc-400
+        "
+      >
+        <input
+          type="checkbox"
+          [ngModel]="
+            field().observation?.required === true
+          "
+          (ngModelChange)="
+            updateObservation({
+              required: $event
+            })
+          "
+          class="size-4 accent-blue-600"
+        />
+
+        Observación requerida
+      </label>
+    </section>
+  }
+</article>
